@@ -72,7 +72,7 @@ public class MapsMarkerActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -96,6 +96,8 @@ public class MapsMarkerActivity extends FragmentActivity implements OnMapReadyCa
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiClient.connect();
+
+
     }
 
     @Override
@@ -119,25 +121,27 @@ public class MapsMarkerActivity extends FragmentActivity implements OnMapReadyCa
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(final Location location) {
 
         mLastLocation = location;
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
          // we get the city name of our current possition by using geocorder.getfromlaction with our latitude and longitude
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-       double MyLat = location.getLatitude();
-        double MyLong = location.getLongitude();
+        final Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+       final double MyLat = location.getLatitude();
+        final double MyLong = location.getLongitude();
         List<Address> addresses = null;
         try {
             addresses = geocoder.getFromLocation(MyLat, MyLong, 1);
         } catch (IOException e) {
             Log.d("msg",e.getMessage());
         }
+
         String cityName = addresses.get(0).getAddressLine(0);
-        //String stateName = addresses.get(0).getAddressLine(1);
-       // String countryName = addresses.get(0).getAddressLine(2);
+
+
+
 
         //Place current location marker
 
@@ -145,16 +149,38 @@ public class MapsMarkerActivity extends FragmentActivity implements OnMapReadyCa
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title(cityName.toString());   // getinng the marker tittle to equal the current location cityname
+
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
+        // ADD a marker on click
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
+
+            @Override
+            public void onMapClick(LatLng destination) {
+                List<Address> addressesClicked = null;
+                try {
+                    addressesClicked = geocoder.getFromLocation(destination.latitude, destination.longitude, 1);
+
+                } catch (IOException e) {
+                    Log.d("msg",e.getMessage());
+                }
+                String cityNameClicked ="test"; //change it to city name
+                MarkerOptions options = new MarkerOptions();
+                options.position(destination);
+                options.title(cityNameClicked);
+                Marker marker = mMap.addMarker(options);
+            }
+        });
         //stop location updates
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
+
+
 
     }
 
@@ -224,8 +250,11 @@ public class MapsMarkerActivity extends FragmentActivity implements OnMapReadyCa
                 return;
             }
 
+
             // other 'case' lines to check for other permissions this app might request.
             // You can add here other case statements according to your requirement.
         }
     }
+
+
 }
