@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -27,8 +28,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -49,6 +53,7 @@ public class MapsMarkerActivity extends FragmentActivity implements OnMapReadyCa
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
     private DatabaseReference database;
+    private TextView databaseTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,23 @@ public class MapsMarkerActivity extends FragmentActivity implements OnMapReadyCa
         setContentView(R.layout.activity_maps);
 
         database = FirebaseDatabase.getInstance().getReference();
+        databaseTextView = (TextView) findViewById(R.id.DatabaseView);
+
+        //listens if firebase-data has been inserted, or if firebase-data has been canceled
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    String data = dataSnapshot.getValue().toString();
+                    databaseTextView.setText(data);
+                } catch(Exception e){ Log.d("status error", e.toString());}
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
