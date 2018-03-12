@@ -6,6 +6,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -26,8 +27,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,11 +48,14 @@ public class MapsMarkerActivity extends FragmentActivity implements OnMapReadyCa
     Location mLastLocation;
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
+    private DatabaseReference database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        database = FirebaseDatabase.getInstance().getReference();
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -139,7 +146,7 @@ public class MapsMarkerActivity extends FragmentActivity implements OnMapReadyCa
             Log.d("msg",e.getMessage());
         }
 
-        String cityName = addresses.get(0).getAddressLine(0);
+        final String cityName = addresses.get(0).getAddressLine(0);
 
 
 
@@ -175,6 +182,15 @@ public class MapsMarkerActivity extends FragmentActivity implements OnMapReadyCa
                 options.position(destination);
                 options.title(cityNameClicked);
                 Marker marker = mMap.addMarker(options);
+
+                //add to firebase here.
+                HashMap<String, String> saveCoords = new HashMap<>();
+                saveCoords.put("lat", String.valueOf(destination.latitude));
+                saveCoords.put("lon", String.valueOf(destination.longitude));
+                saveCoords.put("transport-type", "metro/bus/s-tog");
+                saveCoords.put("note", "han stod af ved jægersborg station");
+
+                database.child("placed marker: " + cityNameClicked).setValue(saveCoords);
             }
         });
         //stop location updates
