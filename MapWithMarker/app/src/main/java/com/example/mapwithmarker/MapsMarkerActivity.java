@@ -128,9 +128,10 @@ public class MapsMarkerActivity extends FragmentActivity implements OnMapReadyCa
             mCurrLocationMarker.remove();
         }
          // we get the city name of our current possition by using geocorder.getfromlaction with our latitude and longitude
-        final Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-       final double MyLat = location.getLatitude();
-        final double MyLong = location.getLongitude();
+         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+       final Geocoder geocoder2 = new Geocoder(this, Locale.getDefault());
+       double MyLat = location.getLatitude();
+         double MyLong = location.getLongitude();
         List<Address> addresses = null;
         try {
             addresses = geocoder.getFromLocation(MyLat, MyLong, 1);
@@ -163,12 +164,13 @@ public class MapsMarkerActivity extends FragmentActivity implements OnMapReadyCa
             public void onMapClick(LatLng destination) {
                 List<Address> addressesClicked = null;
                 try {
-                    addressesClicked = geocoder.getFromLocation(destination.latitude, destination.longitude, 1);
+                    addressesClicked = geocoder2.getFromLocation(destination.latitude, destination.longitude, 1);
 
                 } catch (IOException e) {
                     Log.d("msg",e.getMessage());
                 }
-                String cityNameClicked ="test"; //change it to city name
+
+                String cityNameClicked =addressesClicked.get(0).getAddressLine(0);; //change it to city name
                 MarkerOptions options = new MarkerOptions();
                 options.position(destination);
                 options.title(cityNameClicked);
