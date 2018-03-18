@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "315240418274",
+    "firebase_url": "https://androidexam-196714.firebaseio.com",
+    "project_id": "androidexam-196714",
+    "storage_bucket": "androidexam-196714.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315240418274:android:5eb8134f9b9639f4",
+        "android_client_info": {
+          "package_name": "com.example.rabbatapp.rabatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315240418274-8ep93ohp7u53evppg2ap1jsb65u4hv2n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rabbatapp.rabatapp",
+            "certificate_hash": "279ebd61e1888b4439f2fd9c202fab6bc5523ef7"
+          }
+        },
+        {
+          "client_id": "315240418274-g3ugarv2j6a2c75oqouqria1nhrj1dir.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjA0rz9UmYPx-6A8sHt8LIfkrxEna5Uv0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315240418274-g3ugarv2j6a2c75oqouqria1nhrj1dir.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
