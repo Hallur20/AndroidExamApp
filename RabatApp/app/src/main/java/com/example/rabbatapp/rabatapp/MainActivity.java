@@ -13,6 +13,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -41,9 +51,27 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        ListView listView = findViewById(R.id.listView);
+        listView.setAdapter(new ListViewAdapter(this, readListFromFile()));
 
     }
-
+    private List<Person> readListFromFile(){
+        try{
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getAssets()
+                    .open("persons.txt")));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            while((line = bufferedReader.readLine()) != null){
+                stringBuilder.append(line);
+            }
+            Gson gson = new Gson();
+            return gson.fromJson(stringBuilder.toString(), new TypeToken<List<Person>>(){}
+                    .getType());
+        }catch (IOException exception){
+            exception.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -86,6 +114,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), MapsMarkerActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
+
 
         } else if (id == R.id.nav_slideshow) {
 

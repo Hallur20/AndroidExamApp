@@ -45,6 +45,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MapsMarkerActivity"></activity>
+
     </application>
 
 </manifest>
