@@ -51,8 +51,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        ListView listView = findViewById(R.id.listView);
-        listView.setAdapter(new ListViewAdapter(this, readListFromFile()));
+
 
     }
     private List<Person> readListFromFile(){
@@ -114,7 +113,8 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), MapsMarkerActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
-
+            ListView listView = findViewById(R.id.listView);
+            listView.setAdapter(new ListViewAdapter(this, readListFromFile()));
 
         } else if (id == R.id.nav_slideshow) {
 
