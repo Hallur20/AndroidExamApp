@@ -8,10 +8,11 @@
     tools:context="com.example.rabbatapp.rabatapp.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+
 
 </android.support.constraint.ConstraintLayout>
