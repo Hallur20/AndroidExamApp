@@ -3,6 +3,7 @@ package com.example.hvn15.finaleapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -12,6 +13,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     private EditText username;
     private  EditText password;
@@ -19,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference database2;
     private String firebaseUsername;
     private String firbasePassword;
+    private ArrayList<Person> pList = new ArrayList<>();
+    private static final String TAG = "MainActivity";
 
 
     @Override
@@ -27,12 +32,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
-        database = FirebaseDatabase.getInstance().getReference().child("username");
-        database2 = FirebaseDatabase.getInstance().getReference().child("password");
+        database = FirebaseDatabase.getInstance().getReference();
+        database2 = FirebaseDatabase.getInstance().getReference();
         database2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 firbasePassword = dataSnapshot.getValue().toString();
+
             }
 
             @Override
@@ -43,7 +49,17 @@ public class MainActivity extends AppCompatActivity {
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                firebaseUsername = dataSnapshot.getValue().toString();
+
+
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                pList.add(new Person(
+                        child.child("role").getValue().toString(),
+                        child.child("username").getValue().toString(),
+                        child.child("password").getValue().toString()
+                ));
+
+                }
+                Log.d(TAG, pList.toString());
             }
 
             @Override
@@ -57,9 +73,18 @@ public class MainActivity extends AppCompatActivity {
     public void btnClicked(View view){
         Intent intent = new Intent(this, LoggedIn.class);
         //Log.d("love", database.child("username");
-        if(firebaseUsername.equals(username.getText().toString()) && firbasePassword.equals(password.getText().toString())) {
-            startActivity(intent);
 
+        for (int i = 0; i < pList.size(); i++) {
+            if(pList.get(i).getUsername().equals(username.getText().toString())
+                    && pList.get(i).getPassword().equals(password.getText().toString())
+                    && pList.get(i).getRole().equals("admin")){
+                String name = pList.get(i).getUsername();
+            intent.putExtra("hello", name);
+                startActivity(intent);
+
+
+            }
         }
+
     }
 }
