@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText username;
     private  EditText password;
     private DatabaseReference database;
-    private DatabaseReference database2;
     private String firebaseUsername;
     private String firbasePassword;
     private ArrayList<Person> pList = new ArrayList<>();
@@ -32,32 +31,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
-        database = FirebaseDatabase.getInstance().getReference();
-        database2 = FirebaseDatabase.getInstance().getReference();
-        database2.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                firbasePassword = dataSnapshot.getValue().toString();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        database = FirebaseDatabase.getInstance().getReference().child("users");
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-
                 for(DataSnapshot child : dataSnapshot.getChildren()){
                 pList.add(new Person(
                         child.child("role").getValue().toString(),
                         child.child("username").getValue().toString(),
                         child.child("password").getValue().toString()
                 ));
-
                 }
                 Log.d(TAG, pList.toString());
             }

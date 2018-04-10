@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import static android.content.ContentValues.TAG;
@@ -17,18 +18,18 @@ public class Fragment3 extends Fragment {
 
     private static final String Tag = "Fragment1";
 
-    private Button btnNavFrag1;
-    private Button btnNavFrag2;
-    private Button btnNavFrag3;
+    private ImageButton btnNavFrag1;
+    private ImageButton btnNavFrag2;
+    private ImageButton btnNavFrag3;
     private Button btnNavSecondActivity;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment3_layout, container, false);
-     btnNavFrag1 = (Button) view.findViewById(R.id.btnNavFrag1);
-        btnNavFrag2 = (Button) view.findViewById(R.id.btnNavFrag2);
-        btnNavFrag3 = (Button) view.findViewById(R.id.btnNavFrag3);
+     btnNavFrag1 = (ImageButton) view.findViewById(R.id.btnNavFrag1);
+        btnNavFrag2 = (ImageButton) view.findViewById(R.id.btnNavFrag2);
+        btnNavFrag3 = (ImageButton) view.findViewById(R.id.btnNavFrag3);
         btnNavSecondActivity = (Button) view.findViewById(R.id.btnNavSecondActivity);
         Log.d(TAG, "onCreateView: Started");
         btnNavFrag1.setOnClickListener(new View.OnClickListener() {
