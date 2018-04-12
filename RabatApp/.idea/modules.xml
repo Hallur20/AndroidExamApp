@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RabatApp.iml" filepath="$PROJECT_DIR$/RabatApp.iml" />
-      <module fileurl="file://C:\Users\hvn15\Documents\Android Projects\AndroidExamApp\RabatApp\RabatApp.iml" filepath="C:\Users\hvn15\Documents\Android Projects\AndroidExamApp\RabatApp\RabatApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\hvn15\Documents\Android Projects\AndroidExamApp\RabatApp\app\app.iml" filepath="C:\Users\hvn15\Documents\Android Projects\AndroidExamApp\RabatApp\app\app.iml" />
     </modules>
   </component>
 </project>
