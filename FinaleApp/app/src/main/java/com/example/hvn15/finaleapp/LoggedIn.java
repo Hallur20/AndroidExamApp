@@ -1,9 +1,16 @@
 package com.example.hvn15.finaleapp;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class
 LoggedIn extends AppCompatActivity {
@@ -12,6 +19,7 @@ LoggedIn extends AppCompatActivity {
     private SectionsStatePagerAdapter mSectionsStatePagerAdapter;
     private ViewPager mViewPager;
     public String hej;
+    private Button btnNavSecondActivity;
 
 
     @Override
@@ -23,6 +31,26 @@ LoggedIn extends AppCompatActivity {
         hej = extras.getString("hello");
         Log.d(TAG, hej.toString());
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        btnNavSecondActivity = (Button) findViewById(R.id.btnNavSecondActivity);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.action_list:
+                        setViewPager(0);
+                        break;
+                    case R.id.action_map:
+                        setViewPager(1);
+                        break;
+                    case R.id.action_account:
+                        setViewPager(2);
+                        break;
+                }
+                return true;
+            }
+        });
 
         mSectionsStatePagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
 
