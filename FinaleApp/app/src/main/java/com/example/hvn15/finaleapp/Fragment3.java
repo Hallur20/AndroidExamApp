@@ -2,10 +2,13 @@ package com.example.hvn15.finaleapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,44 +19,34 @@ import static android.content.ContentValues.TAG;
 
 public class Fragment3 extends Fragment {
 
+
     private static final String Tag = "Fragment1";
 
-    private ImageButton btnNavFrag1;
-    private ImageButton btnNavFrag2;
-    private ImageButton btnNavFrag3;
     private Button btnNavSecondActivity;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment3_layout, container, false);
-     btnNavFrag1 = (ImageButton) view.findViewById(R.id.btnNavFrag1);
-        btnNavFrag2 = (ImageButton) view.findViewById(R.id.btnNavFrag2);
-        btnNavFrag3 = (ImageButton) view.findViewById(R.id.btnNavFrag3);
+
+        BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottom_navigation);
         btnNavSecondActivity = (Button) view.findViewById(R.id.btnNavSecondActivity);
-        Log.d(TAG, "onCreateView: Started");
-        btnNavFrag1.setOnClickListener(new View.OnClickListener() {
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(), "Going to Fragment 1", Toast.LENGTH_SHORT).show();
-                //Navigate to fragment method called
-                ((LoggedIn)getActivity()).setViewPager(0);
-            }
-        });
-        btnNavFrag2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(), "Going to Fragment 2", Toast.LENGTH_SHORT).show();
-                //Navigate to fragment method called
-                ((LoggedIn)getActivity()).setViewPager(1);
-            }
-        });
-        btnNavFrag3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(), "Going to Fragment 3", Toast.LENGTH_SHORT).show();
-                //Navigate to fragment method called
-                ((LoggedIn)getActivity()).setViewPager(2);
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.action_list:
+                        ((LoggedIn)getActivity()).setViewPager(0);
+                        break;
+                    case R.id.action_map:
+                        ((LoggedIn)getActivity()).setViewPager(1);
+                        break;
+                    case R.id.action_account:
+                        ((LoggedIn)getActivity()).setViewPager(2);
+                        break;
+                }
+                return true;
             }
         });
         btnNavSecondActivity.setOnClickListener(new View.OnClickListener() {

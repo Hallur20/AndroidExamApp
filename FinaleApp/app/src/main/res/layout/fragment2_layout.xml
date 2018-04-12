@@ -4,34 +4,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/btnNavFrag1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="20dp"
-        app:srcCompat="@drawable/listicon" />
-
-    <ImageButton
-        android:id="@+id/btnNavFrag2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/btnNavFrag1"
-        android:layout_marginEnd="22dp"
-        app:srcCompat="@drawable/mapicon" />
-
-    <ImageButton
-        android:id="@+id/btnNavFrag3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="135dp"
-        android:layout_marginStart="88dp"
-        app:srcCompat="@drawable/accounticon" />
-
     <TextView
         android:id="@+id/textTitle"
         android:layout_width="wrap_content"
@@ -50,4 +22,15 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="72dp"
         android:text="Go to second Activity" />
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        app:itemIconTint="@drawable/nav_item_color_state"
+        app:itemTextColor="@drawable/nav_item_color_state"
+        app:menu="@menu/bottom_navigation_main"
+        android:layout_alignParentLeft="true" />
+
 </RelativeLayout>
