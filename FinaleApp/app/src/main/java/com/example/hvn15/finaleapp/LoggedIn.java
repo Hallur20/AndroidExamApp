@@ -12,10 +12,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
 public class
 LoggedIn extends AppCompatActivity {
 
     private static final String TAG = "LoggedIn";
+    public ArrayList<Shop> shopList = new ArrayList<>();
+    private DatabaseReference database;
     private SectionsStatePagerAdapter mSectionsStatePagerAdapter;
     private ViewPager mViewPager;
     public String hej;
@@ -29,6 +39,28 @@ LoggedIn extends AppCompatActivity {
         Log.d(TAG, "onCreate: Started.");
         Bundle extras = getIntent().getExtras();
         hej = extras.getString("hello");
+        database = FirebaseDatabase.getInstance().getReference().child("data");
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                    shopList.add(new Shop(
+                            child.child("title").getValue().toString(),
+                            child.child("description").getValue().toString()
+
+                    ));
+                }
+
+                Log.d(TAG, shopList.toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         Log.d(TAG, hej.toString());
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
