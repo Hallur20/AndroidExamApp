@@ -6,8 +6,7 @@
         android:id="@+id/action_list"
         android:enabled="true"
         android:icon="@drawable/listicon"
-        android:title="List"
-        />
+        android:title="List" />
     <item
         android:id="@+id/action_map"
         android:enabled="true"
@@ -15,9 +14,9 @@
         android:title="Map"
         />
     <item
-        android:id="@+id/action_account"
-        android:enabled="true"
-        android:icon="@drawable/accounticon"
-        android:title="Account"
-        />
+    android:id="@+id/action_account"
+    android:enabled="true"
+    android:icon="@drawable/accounticon"
+    android:title="Account"
+    />
 </menu>
