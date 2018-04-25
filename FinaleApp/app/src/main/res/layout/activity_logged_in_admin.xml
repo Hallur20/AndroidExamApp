@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.hvn15.finaleapp.LoggedIn">
+    tools:context=".LoggedInAdmin">
 
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+        android:id="@+id/bottom_navigation_admin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

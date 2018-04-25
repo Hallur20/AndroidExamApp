@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private EditText username;
-    private  EditText password;
+    private EditText password;
     private DatabaseReference database;
     private String firebaseUsername;
     private String firbasePassword;
@@ -35,14 +35,15 @@ public class MainActivity extends AppCompatActivity {
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot child : dataSnapshot.getChildren()){
-                pList.add(new Person(
-                        child.child("role").getValue().toString(),
-                        child.child("username").getValue().toString(),
-                        child.child("password").getValue().toString()
-                ));
+                Log.d(TAG, dataSnapshot.toString());
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    pList.add(new Person(
+                            child.child("role").getValue().toString(),
+                            child.child("username").getValue().toString(),
+                            child.child("password").getValue().toString()
+                    ));
                 }
-                Log.d(TAG, pList.toString());
+
             }
 
             @Override
@@ -53,18 +54,25 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    public void btnClicked(View view){
+
+    public void btnClicked(View view) {
         Intent intent = new Intent(this, LoggedIn.class);
+        Intent intent2 = new Intent(this, LoggedInAdmin.class);
         //Log.d("love", database.child("username");
 
         for (int i = 0; i < pList.size(); i++) {
-            if(pList.get(i).getUsername().equals(username.getText().toString())
+            if (pList.get(i).getUsername().equals(username.getText().toString())
                     && pList.get(i).getPassword().equals(password.getText().toString())
-                    && pList.get(i).getRole().equals("admin")){
+                    && pList.get(i).getRole().equals("guest")) {
                 String name = pList.get(i).getUsername();
-            intent.putExtra("hello", name);
+                intent.putExtra("hello", name);
                 startActivity(intent);
 
+
+            } else if (pList.get(i).getUsername().equals(username.getText().toString())
+                    && pList.get(i).getPassword().equals(password.getText().toString())
+                    && pList.get(i).getRole().equals("admin")) {
+                startActivity(intent2);
 
             }
         }

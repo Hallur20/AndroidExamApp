@@ -1,27 +1,18 @@
 package com.example.hvn15.finaleapp;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-
-import static android.content.ContentValues.TAG;
 
 public class Fragment1 extends Fragment {
 
@@ -82,7 +73,7 @@ public class Fragment1 extends Fragment {
             view = getLayoutInflater().inflate(R.layout.customlayout, null);
             ImageView imageView = (ImageView) view.findViewById(R.id.image);
             TextView textView1 = (TextView) view.findViewById(R.id.title);
-            TextView textView2 = (TextView) view.findViewById(R.id.description);
+            TextView textView2 = (TextView) view.findViewById(R.id.description_admin);
 
             imageView.setImageResource(R.drawable.test);
             textView1.setText(copyList.get(i).getTitle());
