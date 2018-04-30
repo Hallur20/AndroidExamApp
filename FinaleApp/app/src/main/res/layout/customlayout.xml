@@ -7,48 +7,45 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="192dp"
-        android:layout_height="45dp"
-        android:layout_centerInParent="true"
+        android:layout_width="121dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="54dp"
+        android:layout_marginTop="17dp"
         android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/description"
         app:layout_constraintEnd_toStartOf="@+id/category"
         app:layout_constraintStart_toEndOf="@+id/image" />
 
     <TextView
-        android:id="@+id/discount"
-        android:layout_width="210dp"
+        android:id="@+id/category"
+        android:layout_width="121dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/title"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="39dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/period" />
+
+    <TextView
+        android:id="@+id/discount"
+        android:layout_width="121dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/title"
+        android:layout_marginTop="66dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/priceafter" />
 
     <TextView
-        android:id="@+id/category"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/title"
-        android:layout_marginBottom="11dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginRight="35dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/period"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/title" />
-
-    <TextView
         android:id="@+id/priceafter"
-        android:layout_width="0dp"
+        android:layout_width="121dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/title"
-        android:layout_marginTop="200dp"
+        android:layout_above="@+id/category"
+        android:layout_alignStart="@+id/discount"
+        android:layout_marginBottom="-168dp"
         android:text="TextView"
         android:textColor="@android:color/holo_orange_light"
         app:layout_constraintEnd_toEndOf="@+id/discount"
@@ -57,16 +54,12 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="0dp"
+        android:layout_width="108dp"
         android:layout_height="97dp"
+        android:layout_above="@+id/pricebefore"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/title"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginLeft="9dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginStart="9dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="-122dp"
+        android:layout_marginStart="19dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/title"
         app:layout_constraintHorizontal_bias="0.03"
@@ -77,25 +70,22 @@
 
     <TextView
         android:id="@+id/description"
-        android:layout_width="0dp"
+        android:layout_width="121dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/title"
-        android:layout_marginBottom="12dp"
+        android:layout_marginTop="203dp"
         android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/category"
-        app:layout_constraintEnd_toEndOf="@+id/title"
         app:layout_constraintStart_toStartOf="@+id/category" />
 
     <TextView
         android:id="@+id/period"
-        android:layout_width="0dp"
+        android:layout_width="121dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/title"
-        android:layout_marginBottom="15dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginRight="1dp"
+        android:layout_marginTop="93dp"
         android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/pricebefore"
         app:layout_constraintEnd_toEndOf="@+id/description"
@@ -103,11 +93,11 @@
 
     <TextView
         android:id="@+id/pricebefore"
-        android:layout_width="0dp"
+        android:layout_width="121dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/title"
-        android:layout_marginBottom="11dp"
+        android:layout_marginTop="122dp"
         android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/priceafter"
         app:layout_constraintEnd_toEndOf="@+id/period"
@@ -115,11 +105,11 @@
 
     <TextView
         android:id="@+id/date"
-        android:layout_width="0dp"
+        android:layout_width="121dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/title"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="21dp"
+        android:layout_marginTop="175dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="@+id/category"
         app:layout_constraintStart_toStartOf="@+id/discount"
