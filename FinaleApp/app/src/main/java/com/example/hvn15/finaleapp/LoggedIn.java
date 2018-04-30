@@ -44,10 +44,18 @@ LoggedIn extends AppCompatActivity {
                 for(DataSnapshot child : dataSnapshot.getChildren()){
                     for(DataSnapshot child2 : child.getChildren()){
                         //loop gennnem tilbud her
+                               // Log.d(TAG, "test" + child2.child("discount").getValue().toString());
                         shopList.add(new Shop(
-                                child2.child("title").getValue().toString(),
-                                child2.child("description").getValue().toString()
+                                child2.child("category").getValue().toString(),
+                                child2.child("date").getValue().toString(),
+                                child2.child("description").getValue().toString(),
+                                child2.child("discount").getValue().toString(),
+                                child2.child("period").getValue().toString(),
+                                child2.child("price_after").getValue().toString(),
+                                child2.child("price_before").getValue().toString(),
+                                child2.child("title").getValue().toString()
                         ));
+
                     }
                 }
                 Log.d(TAG, shopList.toString());

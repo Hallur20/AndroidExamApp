@@ -1,5 +1,6 @@
 package com.example.hvn15.finaleapp;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
@@ -7,7 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,12 +25,23 @@ public class LoggedInAdmin extends AppCompatActivity {
     private static final String TAG = "AdminLoggedIn";
     private AdminSectionsStatePagerAdapter mSectionsStatePagerAdapter;
     private ViewPager mViewPager;
+    private EditText input_period;
+    private EditText input_title;
+    private EditText input_description;
+    private Button add_discount;
+    public String adminName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in_admin);
         Log.d(TAG, "onCreate: Started.");
+        input_period = (EditText) findViewById(R.id.input_period);
+        input_title = (EditText) findViewById(R.id.input_title);
+        input_description = (EditText) findViewById(R.id.input_description);
+        add_discount = (Button) findViewById(R.id.add_discount);
+        Intent intent = getIntent();
+        adminName = intent.getStringExtra("adminName");
 
         mSectionsStatePagerAdapter = new AdminSectionsStatePagerAdapter(getSupportFragmentManager());
 
@@ -44,7 +58,6 @@ public class LoggedInAdmin extends AppCompatActivity {
         adapter.addFragment(new AdminFragment3(), "AdminFragment3");
         viewPager.setAdapter(adapter);
     }
-
     public void setViewPager (int fragmentNumber){
         mViewPager.setCurrentItem(fragmentNumber);
     }

@@ -30,9 +30,9 @@ public class Fragment1 extends Fragment {
         /*btnNavSecondActivity = (Button) view.findViewById(R.id.btnNavSecondActivity);*/
         listView = (ListView) view.findViewById(R.id.listview);
         showData = (Button) view.findViewById(R.id.showdata);
-        copyList = ((LoggedIn)getActivity()).shopList;
+        copyList = ((LoggedIn) getActivity()).shopList;
 
-        showData.setOnClickListener(new View.OnClickListener(){
+        showData.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -72,12 +72,27 @@ public class Fragment1 extends Fragment {
         public View getView(int i, View view, ViewGroup parent) {
             view = getLayoutInflater().inflate(R.layout.customlayout, null);
             ImageView imageView = (ImageView) view.findViewById(R.id.image);
-            TextView textView1 = (TextView) view.findViewById(R.id.title);
-            TextView textView2 = (TextView) view.findViewById(R.id.description_admin);
+            TextView description = (TextView) view.findViewById(R.id.description);
+            TextView title = (TextView) view.findViewById(R.id.title);
+          TextView category = (TextView) view.findViewById(R.id.category);
+            TextView date = (TextView) view.findViewById(R.id.date);
+            TextView discount = (TextView) view.findViewById(R.id.discount);
+            TextView period = (TextView) view.findViewById(R.id.period);
+            TextView priceafter = (TextView) view.findViewById(R.id.priceafter);
+            TextView pricebefore = (TextView) view.findViewById(R.id.pricebefore);
+
+
 
             imageView.setImageResource(R.drawable.test);
-            textView1.setText(copyList.get(i).getTitle());
-            textView2.setText(copyList.get(i).getDescription());
+            category.setText(copyList.get(i).getCategory());
+            date.setText(copyList.get(i).getDate());
+            description.setText(copyList.get(i).getDescription());
+            discount.setText(copyList.get(i).getDiscount());
+            period.setText(copyList.get(i).getPeriod());
+            pricebefore.setText(copyList.get(i).getPricebefore());
+            priceafter.setText(copyList.get(i).getPriceafter());
+            title.setText(copyList.get(i).getTitle());
+
             return view;
         }
     }

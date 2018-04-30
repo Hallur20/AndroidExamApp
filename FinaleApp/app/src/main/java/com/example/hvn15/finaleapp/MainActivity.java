@@ -72,7 +72,10 @@ public class MainActivity extends AppCompatActivity {
             } else if (pList.get(i).getUsername().equals(username.getText().toString())
                     && pList.get(i).getPassword().equals(password.getText().toString())
                     && pList.get(i).getRole().equals("admin")) {
+                String name = pList.get(i).getUsername();
+                intent2.putExtra("adminName", name);
                 startActivity(intent2);
+
 
             }
         }
