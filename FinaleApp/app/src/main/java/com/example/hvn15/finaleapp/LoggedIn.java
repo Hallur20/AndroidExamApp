@@ -22,6 +22,7 @@ LoggedIn extends AppCompatActivity {
 
     private static final String TAG = "LoggedIn";
     public ArrayList<Shop> shopList = new ArrayList<>();
+    public ArrayList<Person> users = new ArrayList<>();
     private DatabaseReference database;
     private SectionsStatePagerAdapter mSectionsStatePagerAdapter;
     private ViewPager mViewPager;
@@ -37,6 +38,7 @@ LoggedIn extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         hej = extras.getString("hello");
         database = FirebaseDatabase.getInstance().getReference().child("data");
+        users = (ArrayList<Person>) getIntent().getSerializableExtra("users");
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

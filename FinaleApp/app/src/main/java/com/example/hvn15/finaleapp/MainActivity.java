@@ -35,14 +35,27 @@ public class MainActivity extends AppCompatActivity {
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, dataSnapshot.toString());
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    pList.add(new Person(
-                            child.child("role").getValue().toString(),
-                            child.child("username").getValue().toString(),
-                            child.child("password").getValue().toString()
-                    ));
+                    if (child.child("role").getValue().equals("admin")) {
+                        pList.add(new Person(
+                                child.child("role").getValue().toString(),
+                                child.child("username").getValue().toString(),
+                                child.child("password").getValue().toString(),
+                                Double.parseDouble(child.child("latitude").getValue().toString()),
+                                Double.parseDouble(child.child("longitude").getValue().toString()),
+                                child.child("title").getValue().toString(),
+                                child.child("address").getValue().toString()
+                        ));
+                        Log.d(TAG, child.toString());
+                    } else {
+                        pList.add(new Person(
+                                child.child("role").getValue().toString(),
+                                child.child("username").getValue().toString(),
+                                child.child("password").getValue().toString()
+                        ));
+                    }
                 }
+
 
             }
 
@@ -66,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     && pList.get(i).getRole().equals("guest")) {
                 String name = pList.get(i).getUsername();
                 intent.putExtra("hello", name);
+                intent.putExtra("users", pList);
                 startActivity(intent);
 
 

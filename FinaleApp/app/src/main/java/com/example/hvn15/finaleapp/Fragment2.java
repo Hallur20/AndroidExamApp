@@ -20,9 +20,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
 
@@ -40,32 +44,23 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
     GoogleMap mGoogleMap;
     MapView mMapView;
     View mView;
+    ArrayList<Person> companies = new ArrayList<>();
 
-    private static final String Tag = "Fragment1";
+    private static final String Tag = "Fragment2";
 
-    private Button btnNavSecondActivity;
+    private Button showMarkers;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment2_layout, container, false);
-        btnNavSecondActivity = (Button) mView.findViewById(R.id.btnNavSecondActivity);
-
-
-        btnNavSecondActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(), "Going to Second Activity", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), SecondActivity.class);
-                startActivity(intent);
-            }
-        });
+        companies = ((LoggedIn)getActivity()).users;
+        Log.d(Tag, companies.toString());
         return mView;
     }
     @Override
     public void onViewCreated(View view, Bundle saveInstanceState){
         super.onViewCreated(view,saveInstanceState);
-
         mMapView = (MapView) mView.findViewById(R.id.map);
         if(mMapView != null){
             mMapView.onCreate(null);
@@ -81,7 +76,14 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
 
         googleMap.setMapType(googleMap.MAP_TYPE_NORMAL);
 
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(55.676098, 12.568337)).title("Dk").snippet("I Love Dk"));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(55.676098, 12.568337)).title("you").snippet("you are here"));
+        for(Person p : companies){
+            if(p.getRole().equals("admin")){
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(p.getLatitude(),p.getLongitude())).title(p.getTitle()).snippet(p.getAddress()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+            }
+        }
+
+
         CameraPosition DK= CameraPosition.builder().target(new LatLng(55.676098, 12.568337)).zoom(5).bearing(0).tilt(0).build();
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(DK));
     }
