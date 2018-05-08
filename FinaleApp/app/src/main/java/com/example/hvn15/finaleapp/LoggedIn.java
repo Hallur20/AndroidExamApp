@@ -72,7 +72,7 @@ LoggedIn extends AppCompatActivity {
         Log.d(TAG, hej.toString());
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        btnNavSecondActivity = (Button) findViewById(R.id.btnNavSecondActivity);
+        //btnNavSecondActivity = (Button) findViewById(R.id.btnNavSecondActivity);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

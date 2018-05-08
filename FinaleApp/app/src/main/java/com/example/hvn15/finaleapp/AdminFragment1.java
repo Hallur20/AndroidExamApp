@@ -52,7 +52,7 @@ public class AdminFragment1 extends Fragment implements AdapterView.OnItemSelect
         View view = inflater.inflate(R.layout.adminfragment1_layout, container, false);
         adminName = ((LoggedInAdmin) getActivity()).adminName;
         Log.d(TAG, "onCreateView: " + adminName);
-        scrollView = (ScrollView) view.findViewById(R.id.discount_scroll);
+        //scrollView = (ScrollView) view.findViewById(R.id.discount_scroll);
         input_period = (EditText) view.findViewById(R.id.input_period);
         input_title = (EditText) view.findViewById(R.id.input_title);
         input_discount = (EditText)view.findViewById(R.id.input_discount);
