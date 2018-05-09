@@ -1,7 +1,12 @@
 package com.example.hvn15.finaleapp;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,11 +32,27 @@ LoggedIn extends AppCompatActivity {
     private SectionsStatePagerAdapter mSectionsStatePagerAdapter;
     private ViewPager mViewPager;
     public String hej;
+    private static final int LOCATION_REQUEST_CODE = 101;
     private Button btnNavSecondActivity;
+    public Location location;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Log.d("loggedinTest", location.toString());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in);
         Log.d(TAG, "onCreate: Started.");
@@ -39,6 +60,13 @@ LoggedIn extends AppCompatActivity {
         hej = extras.getString("hello");
         database = FirebaseDatabase.getInstance().getReference().child("data");
         users = (ArrayList<Person>) getIntent().getSerializableExtra("users");
+
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
+            return;
+        }
+
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

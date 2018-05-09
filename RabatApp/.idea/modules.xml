@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidExamApp-RabatApp.iml" filepath="$PROJECT_DIR$/AndroidExamApp-RabatApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/RabatApp.iml" filepath="$PROJECT_DIR$/RabatApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/RabatApp-app.iml" filepath="$PROJECT_DIR$/app/RabatApp-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
