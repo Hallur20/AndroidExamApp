@@ -41,14 +41,11 @@ LoggedIn extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in);
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         mSectionsStatePagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
-
         mViewPager = (ViewPager) findViewById(R.id.container_admin);
         //Setup the pager
         setupViewPager(mViewPager);
-
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -57,10 +54,9 @@ LoggedIn extends AppCompatActivity {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             return;
         }
-
+        location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         Log.d("loggedinTest", location.toString());
 
 
@@ -72,17 +68,12 @@ LoggedIn extends AppCompatActivity {
         users = (ArrayList<Person>) getIntent().getSerializableExtra("users");
 
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
-            return;
-        }
-
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for(DataSnapshot child : dataSnapshot.getChildren()){
-                    for(DataSnapshot child2 : child.getChildren()){
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    for (DataSnapshot child2 : child.getChildren()) {
                         //loop gennnem tilbud her
                         // Log.d(TAG, "test" + child2.child("discount").getValue().toString());
                         shopList.add(new Shop(
@@ -115,7 +106,7 @@ LoggedIn extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch(item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.action_list:
                         setViewPager(0);
                         break;
@@ -131,10 +122,9 @@ LoggedIn extends AppCompatActivity {
         });
 
 
-
-
     }
-    private void setupViewPager(ViewPager viewPager){
+
+    private void setupViewPager(ViewPager viewPager) {
         SectionsStatePagerAdapter adapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new Fragment1(), "Fragment1");
         adapter.addFragment(new Fragment2(), "Fragment2");
@@ -142,8 +132,10 @@ LoggedIn extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
-    public void setViewPager (int fragmentNumber){
+    public void setViewPager(int fragmentNumber) {
         mViewPager.setCurrentItem(fragmentNumber);
     }
+
+
 
 }

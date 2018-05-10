@@ -82,8 +82,7 @@ Location location;
     public void onMapReady(GoogleMap googleMap) {
         MapsInitializer.initialize(getContext());
         mGoogleMap = googleMap;
-        location = ((LoggedIn)getActivity()).location;
-        Log.d("mapTest", location.toString());
+
 
         googleMap.setMapType(googleMap.MAP_TYPE_NORMAL);
         if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -97,6 +96,8 @@ Location location;
             return;
         }
         googleMap.setMyLocationEnabled(true);
+        location = ((LoggedIn)getActivity()).location;
+        Log.d("mapTest", location.toString());
 
         Marker marker1 = googleMap.addMarker(new MarkerOptions().position(new LatLng(/*location.getLatitude()*/55.957738, /*location.getLongitude()*/12.260400)).title("you").snippet("you are here"));
 
@@ -129,5 +130,4 @@ Location location;
         CameraPosition DK= CameraPosition.builder().target(new LatLng(location.getLatitude(), location.getLongitude())).zoom(5).bearing(0).tilt(0).build();
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(DK));
     }
-
 }
