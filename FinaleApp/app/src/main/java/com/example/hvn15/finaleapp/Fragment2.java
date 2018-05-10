@@ -112,12 +112,12 @@ Location location;
 
         Log.d("mapTest", ( String.valueOf(results[0]/1000)));
 
-       /* if(results[0]/1000 < 5){
+       if(results[0]/1000 < 5){
 
             ((LoggedIn)getActivity()).vibrator.vibrate(400);
 
         }
-*/
+
 
 
         for(Person p : companies){
@@ -127,7 +127,7 @@ Location location;
         }
 
 
-        CameraPosition DK= CameraPosition.builder().target(new LatLng(location.getLatitude(), location.getLongitude())).zoom(5).bearing(0).tilt(0).build();
+        CameraPosition DK= CameraPosition.builder().target(new LatLng(/*location.getLatitude()*/55.957738, /*location.getLongitude()*/12.260400)).zoom(5).bearing(0).tilt(0).build();
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(DK));
     }
 }

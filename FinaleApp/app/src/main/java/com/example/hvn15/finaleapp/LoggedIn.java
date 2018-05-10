@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -35,6 +36,7 @@ LoggedIn extends AppCompatActivity {
     private static final int LOCATION_REQUEST_CODE = 101;
     private Button btnNavSecondActivity;
     public Location location;
+    public Vibrator vibrator;
 
 
     @Override
@@ -43,6 +45,7 @@ LoggedIn extends AppCompatActivity {
         setContentView(R.layout.activity_logged_in);
         mSectionsStatePagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container_admin);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         //Setup the pager
         setupViewPager(mViewPager);
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
