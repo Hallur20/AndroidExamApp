@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class
 LoggedIn extends AppCompatActivity {
@@ -29,6 +30,7 @@ LoggedIn extends AppCompatActivity {
     private static final String TAG = "LoggedIn";
     public ArrayList<Shop> shopList = new ArrayList<>();
     public ArrayList<Person> users = new ArrayList<>();
+    public HashMap<String, ArrayList<Shop>> test1 =  new HashMap<>();
     private DatabaseReference database;
     private SectionsStatePagerAdapter mSectionsStatePagerAdapter;
     private ViewPager mViewPager;
@@ -76,23 +78,26 @@ LoggedIn extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    String id = child.getKey();
+                    ArrayList<Shop> discountsBelongingToShop = new ArrayList<>();
+                    Log.d("idTest", id);
                     for (DataSnapshot child2 : child.getChildren()) {
                         //loop gennnem tilbud her
                         // Log.d(TAG, "test" + child2.child("discount").getValue().toString());
-                        shopList.add(new Shop(
-                                child2.child("category").getValue().toString(),
+                        Shop shop = new Shop(child2.child("category").getValue().toString(),
                                 child2.child("date").getValue().toString(),
                                 child2.child("description").getValue().toString(),
                                 child2.child("discount").getValue().toString(),
                                 child2.child("period").getValue().toString(),
                                 child2.child("price_after").getValue().toString(),
                                 child2.child("price_before").getValue().toString(),
-                                child2.child("title").getValue().toString()
-                        ));
-
+                                child2.child("title").getValue().toString());
+                        shopList.add(shop);
+                        discountsBelongingToShop.add(shop);
                     }
+                    test1.put(id, discountsBelongingToShop);
                 }
-                Log.d(TAG, shopList.toString());
+                Log.d("hash", test1.toString());
             }
 
             @Override

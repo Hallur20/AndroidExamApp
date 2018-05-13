@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private String firebaseUsername;
     private String firbasePassword;
     private ArrayList<Person> pList = new ArrayList<>();
+    public ArrayList<String> uNames =  new ArrayList<>();
     private static final String TAG = "MainActivity";
 
 

@@ -1,5 +1,8 @@
 package com.example.hvn15.finaleapp;
 
+import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -52,6 +56,9 @@ Location location;
     MapView mMapView;
     View mView;
     ArrayList<Person> companies = new ArrayList<>();
+    ArrayList<String> userNamesInRadius = new ArrayList<>();
+    int min = 100;
+    int max = 0;
 
     private static final String Tag = "Fragment2";
 
@@ -85,7 +92,7 @@ Location location;
 
 
         googleMap.setMapType(googleMap.MAP_TYPE_NORMAL);
-        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -101,33 +108,72 @@ Location location;
 
         Marker marker1 = googleMap.addMarker(new MarkerOptions().position(new LatLng(/*location.getLatitude()*/55.957738, /*location.getLongitude()*/12.260400)).title("you").snippet("you are here"));
 
-        Marker marker2 = googleMap.addMarker(new MarkerOptions().position(new LatLng(55.933770,12.286840)).title("firma titel").snippet("firma addresse").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+        //Marker marker2 = googleMap.addMarker(new MarkerOptions().position(new LatLng(55.933770,12.286840)).title("firma titel").snippet("firma addresse").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 
 
 
-        float[] results = new float[1];
-        Location.distanceBetween(marker1.getPosition().latitude, marker1.getPosition().longitude,
-                marker2.getPosition().latitude, marker2.getPosition().longitude,
-                results);
 
-        Log.d("mapTest", ( String.valueOf(results[0]/1000)));
+
+
+       /* Log.d("mapTest", ( String.valueOf(results[0]/1000)));
 
        if(results[0]/1000 < 5){
 
             ((LoggedIn)getActivity()).vibrator.vibrate(400);
-
-        }
-
-
+          NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), "2"); //helps constructing the typical notification layouts
+           builder.setContentTitle("Simple Notification"); //sets the string to be shown as a title for the notification
+           builder.setContentText("Hello World!"); //sets the string to be shown as the context text for the notification
+           builder.setSmallIcon(R.mipmap.ic_launcher); //sets an image as an icon for the notification
+           Notification notification = builder.build(); //we are done and we parse the build to be of the type 'Notification'
+           NotificationManager nm = (NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE); //has some tools for notifications, in this case we are looking for 'notify'
+           nm.notify(3, notification); //notify sends the notification
+        }*/
 
         for(Person p : companies){
             if(p.getRole().equals("admin")){
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(p.getLatitude(),p.getLongitude())).title(p.getTitle()).snippet(p.getAddress()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(p.getLatitude(),p.getLongitude())).title(p.getTitle()).snippet(p.getAddress()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                float[] results = new float[1];
+                Location.distanceBetween(marker1.getPosition().latitude, marker1.getPosition().longitude,
+                        marker.getPosition().latitude, marker.getPosition().longitude,
+                        results);
+                if(results[0]/1000 < 500){
+                    userNamesInRadius.add(p.getUsername());
+                }
             }
         }
+        for(int i = 0; i < ((LoggedIn)getActivity()).test1.size(); i++){
+            for(int j = 0; j < userNamesInRadius.size(); j++){
+                if(((LoggedIn)getActivity()).test1.containsKey(userNamesInRadius.get(j))){
+                    for(int k = 0; k < ((LoggedIn) getActivity()).test1.get(userNamesInRadius.get(j)).size(); k++){
+                        if(Integer.parseInt(((LoggedIn)getActivity()).test1.get(userNamesInRadius.get(j)).get(k).getDiscount()) < min){
+                            min = Integer.parseInt(((LoggedIn)getActivity()).test1.get(userNamesInRadius.get(j)).get(k).getDiscount());
+                        }
+                        if( Integer.parseInt(((LoggedIn)getActivity()).test1.get(userNamesInRadius.get(j)).get(k).getDiscount()) > max){
+                            max = Integer.parseInt(((LoggedIn)getActivity()).test1.get(userNamesInRadius.get(j)).get(k).getDiscount());
+                        }
+                        Log.d("markerTest", min+", " + max);
+                    }
+                }
+            }
+
+        }
+        if(userNamesInRadius.size() > 0){
+
+            ((LoggedIn)getActivity()).vibrator.vibrate(400);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), "2"); //helps constructing the typical notification layouts
+            builder.setContentTitle("There are: " + userNamesInRadius.size() + " stores near you! (in a 500 km radius)"); //sets the string to be shown as a title for the notification
+            builder.setContentText("discounts go from: " + min + "% to " + max+"%"); //sets the string to be shown as the context text for the notification
+            builder.setSmallIcon(R.mipmap.ic_launcher); //sets an image as an icon for the notification
+            Notification notification = builder.build(); //we are done and we parse the build to be of the type 'Notification'
+            NotificationManager nm = (NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE); //has some tools for notifications, in this case we are looking for 'notify'
+            nm.notify(3, notification); //notify sends the notification
+        }
+
 
 
         CameraPosition DK= CameraPosition.builder().target(new LatLng(/*location.getLatitude()*/55.957738, /*location.getLongitude()*/12.260400)).zoom(5).bearing(0).tilt(0).build();
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(DK));
     }
+
+
 }
