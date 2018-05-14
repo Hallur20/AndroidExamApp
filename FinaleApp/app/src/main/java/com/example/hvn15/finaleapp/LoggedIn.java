@@ -59,12 +59,17 @@ LoggedIn extends AppCompatActivity {
         //getting the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         seekbarNumber = (TextView) findViewById(R.id.seekbarNumber);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
 
         //setting the title
         toolbar.setTitle("My Toolbar");
 
         //placing toolbar in place of actionbar
         setSupportActionBar(toolbar);
+        mViewPager = (ViewPager) findViewById(R.id.container_admin);
+        //Setup the pager
+        setupViewPager(mViewPager);
         seekBar = (SeekBar) findViewById(R.id.seekBar2);
         seekBar.incrementProgressBy(5);
         seekBar.setMax(99/5);
@@ -77,7 +82,7 @@ LoggedIn extends AppCompatActivity {
                 progress = (i*5) + 5;
                 seekbarNumber.setText(""+progress);
 
-                getSupportFragmentManager()
+                /*getSupportFragmentManager()
                         .beginTransaction()
                         .add(R.id.container_admin, new Fragment1())
                         .commit();
@@ -90,8 +95,10 @@ LoggedIn extends AppCompatActivity {
                                 .findFragmentById(R.id.container_admin);
 
                 ListView lw = findViewById(R.id.listview);
-                awesome.updateList(progress, lw, shopList);
-
+                awesome.updateList(progress, lw, shopList);*/
+                Fragment1 f1 = new Fragment1();
+                ListView lw = findViewById(R.id.listview);
+                f1.updateList(lw, shopList);
                 }
 
                 @Override
@@ -107,10 +114,7 @@ LoggedIn extends AppCompatActivity {
 
                 mSectionsStatePagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
 
-        mViewPager = (ViewPager) findViewById(R.id.container_admin);
-        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        //Setup the pager
-        setupViewPager(mViewPager);
+
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -131,6 +135,8 @@ LoggedIn extends AppCompatActivity {
         hej = extras.getString("hello");
         database = FirebaseDatabase.getInstance().getReference().child("data");
         users = (ArrayList<Person>) getIntent().getSerializableExtra("users");
+
+
 
 
         database.addValueEventListener(new ValueEventListener() {

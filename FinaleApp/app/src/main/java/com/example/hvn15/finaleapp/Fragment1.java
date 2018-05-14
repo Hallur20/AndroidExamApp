@@ -1,8 +1,10 @@
 package com.example.hvn15.finaleapp;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.ContentFrameLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,13 +85,19 @@ public class Fragment1 extends Fragment {
         }
     }
 
-    public void updateList(int discountNum , ListView lw, ArrayList<Shop> fromLoggedIn){
+    public void updateList(ListView lw, ArrayList<Shop> list){
         Log.d("hello", "hello world");
-        copyList = fromLoggedIn;
-        Log.d("halluryo",copyList.toString());
+        copyList = list;
+        Log.d("halluryo", copyList.toString());
+        for(int i = 0; i < copyList.size(); i++){
+            if(Integer.parseInt(copyList.get(i).getDiscount()) < 50){
+                copyList.remove(i);
+            }
+        }
 
 
-        customAdapter = new CustomAdapter();
-        lw.setAdapter(customAdapter);
+        Log.d("halluryo", "deleted: " + copyList.toString());
+        //customAdapter = new CustomAdapter();
+        //lw.setAdapter(customAdapter);
     }
 }
