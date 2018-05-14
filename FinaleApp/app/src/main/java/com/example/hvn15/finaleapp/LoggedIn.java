@@ -11,9 +11,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,6 +49,14 @@ LoggedIn extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in);
+        //getting the toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        //setting the title
+        toolbar.setTitle("My Toolbar");
+
+        //placing toolbar in place of actionbar
+        setSupportActionBar(toolbar);
         mSectionsStatePagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container_admin);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -131,7 +143,33 @@ LoggedIn extends AppCompatActivity {
 
 
     }
+    @Override
+    //calling the top toolbar menu options
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+    // when you select an option from the toolbar  menu
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
+        switch(item.getItemId()){
+            case R.id.menuAbout:
+                Toast.makeText(this, "You clicked about", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.menuSettings:
+                Toast.makeText(this, "You clicked settings", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.menuLogout:
+                Toast.makeText(this, "You clicked logout", Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+        return true;
+    }
     private void setupViewPager(ViewPager viewPager) {
         SectionsStatePagerAdapter adapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new Fragment1(), "Fragment1");
