@@ -3,6 +3,7 @@ package com.example.hvn15.finaleapp;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +14,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Fragment1 extends Fragment {
 
     private static final String Tag = "Fragment1";
 
     /*private Button btnNavSecondActivity;*/
-    private Button showData;
     private ArrayList<Shop> copyList = new ArrayList<Shop>();
     private ListView listView;
+    private CustomAdapter customAdapter = new CustomAdapter();
 
     @Nullable
     @Override
@@ -29,25 +31,9 @@ public class Fragment1 extends Fragment {
         View view = inflater.inflate(R.layout.fragment1_layout, container, false);
         /*btnNavSecondActivity = (Button) view.findViewById(R.id.btnNavSecondActivity);*/
         listView = (ListView) view.findViewById(R.id.listview);
-        showData = (Button) view.findViewById(R.id.showdata);
         copyList = ((LoggedIn) getActivity()).shopList;
-
-        showData.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                CustomAdapter customAdapter = new CustomAdapter();
+                customAdapter = new CustomAdapter();
                 listView.setAdapter(customAdapter);
-            }
-        });
-        /*btnNavSecondActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(), "Going to Second Activity", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), SecondActivity.class);
-                startActivity(intent);
-            }
-        });*/
         return view;
     }
 
@@ -95,5 +81,15 @@ public class Fragment1 extends Fragment {
 
             return view;
         }
+    }
+
+    public void updateList(int discountNum , ListView lw, ArrayList<Shop> fromLoggedIn){
+        Log.d("hello", "hello world");
+        copyList = fromLoggedIn;
+        Log.d("halluryo",copyList.toString());
+
+
+        customAdapter = new CustomAdapter();
+        lw.setAdapter(customAdapter);
     }
 }

@@ -8,6 +8,7 @@ import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -34,7 +38,7 @@ LoggedIn extends AppCompatActivity {
     private static final String TAG = "LoggedIn";
     public ArrayList<Shop> shopList = new ArrayList<>();
     public ArrayList<Person> users = new ArrayList<>();
-    public HashMap<String, ArrayList<Shop>> test1 =  new HashMap<>();
+    public HashMap<String, ArrayList<Shop>> test1 = new HashMap<>();
     private DatabaseReference database;
     private SectionsStatePagerAdapter mSectionsStatePagerAdapter;
     private ViewPager mViewPager;
@@ -43,6 +47,9 @@ LoggedIn extends AppCompatActivity {
     private Button btnNavSecondActivity;
     public Location location;
     public Vibrator vibrator;
+    private SeekBar seekBar;
+    private TextView seekbarNumber;
+    int progress = 25/5;
 
 
     @Override
@@ -51,13 +58,55 @@ LoggedIn extends AppCompatActivity {
         setContentView(R.layout.activity_logged_in);
         //getting the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        seekbarNumber = (TextView) findViewById(R.id.seekbarNumber);
 
         //setting the title
         toolbar.setTitle("My Toolbar");
 
         //placing toolbar in place of actionbar
         setSupportActionBar(toolbar);
-        mSectionsStatePagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
+        seekBar = (SeekBar) findViewById(R.id.seekBar2);
+        seekBar.incrementProgressBy(5);
+        seekBar.setMax(99/5);
+        seekBar.setProgress(progress);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                progress = i/5;
+                progress = (i*5) + 5;
+                seekbarNumber.setText(""+progress);
+
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.container_admin, new Fragment1())
+                        .commit();
+
+
+                FragmentManager fm = getSupportFragmentManager();
+
+                Fragment1 awesome = (Fragment1)
+                        getSupportFragmentManager()
+                                .findFragmentById(R.id.container_admin);
+
+                ListView lw = findViewById(R.id.listview);
+                awesome.updateList(progress, lw, shopList);
+
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+                });
+
+                mSectionsStatePagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
+
         mViewPager = (ViewPager) findViewById(R.id.container_admin);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         //Setup the pager
@@ -75,7 +124,6 @@ LoggedIn extends AppCompatActivity {
         }
         location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         Log.d("loggedinTest", location.toString());
-
 
 
         Log.d(TAG, "onCreate: Started.");
@@ -143,6 +191,7 @@ LoggedIn extends AppCompatActivity {
 
 
     }
+
     @Override
     //calling the top toolbar menu options
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -150,11 +199,12 @@ LoggedIn extends AppCompatActivity {
         menuInflater.inflate(R.menu.menu, menu);
         return true;
     }
+
     // when you select an option from the toolbar  menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menuAbout:
                 Toast.makeText(this, "You clicked about", Toast.LENGTH_SHORT).show();
                 break;
@@ -170,6 +220,7 @@ LoggedIn extends AppCompatActivity {
         }
         return true;
     }
+
     private void setupViewPager(ViewPager viewPager) {
         SectionsStatePagerAdapter adapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new Fragment1(), "Fragment1");
@@ -181,7 +232,6 @@ LoggedIn extends AppCompatActivity {
     public void setViewPager(int fragmentNumber) {
         mViewPager.setCurrentItem(fragmentNumber);
     }
-
 
 
 }
