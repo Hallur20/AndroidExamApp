@@ -14,9 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -49,6 +52,8 @@ LoggedIn extends AppCompatActivity {
     public Vibrator vibrator;
     private SeekBar seekBar;
     private TextView seekbarNumber;
+    private Fragment1 fragment1;
+    private ListView listView;
     int progress = 25/5;
 
 
@@ -59,6 +64,9 @@ LoggedIn extends AppCompatActivity {
         //getting the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         seekbarNumber = (TextView) findViewById(R.id.seekbarNumber);
+        Fragment1 f1 = new Fragment1();
+        fragment1 = f1;
+        listView = (ListView) findViewById(R.id.listview);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 
@@ -96,10 +104,9 @@ LoggedIn extends AppCompatActivity {
 
                 ListView lw = findViewById(R.id.listview);
                 awesome.updateList(progress, lw, shopList);*/
-                Fragment1 f1 = new Fragment1();
-                ListView lw = findViewById(R.id.listview);
-                f1.updateList(lw, shopList);
-                }
+                fragment1.updateList(shopList, progress);
+
+            }
 
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
@@ -164,6 +171,7 @@ LoggedIn extends AppCompatActivity {
                     test1.put(id, discountsBelongingToShop);
                 }
                 Log.d("hash", test1.toString());
+                fragment1.updateList(shopList, 0); //makes a default homescreen for the CustomAdapter list
             }
 
             @Override
