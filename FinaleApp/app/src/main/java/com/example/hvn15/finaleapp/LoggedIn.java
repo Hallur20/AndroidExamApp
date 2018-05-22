@@ -13,6 +13,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -32,12 +35,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class
 LoggedIn extends AppCompatActivity {
-
+    private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     private static final String TAG = "LoggedIn";
     public ArrayList<Shop> shopList = new ArrayList<>();
     public ArrayList<Person> users = new ArrayList<>();
@@ -51,10 +60,15 @@ LoggedIn extends AppCompatActivity {
     public Location location;
     public Vibrator vibrator;
     private SeekBar seekBar;
+    private SeekBar seekBar2;
+    private EditText filterWithName;
+    private EditText filterWithCategory;
     private TextView seekbarNumber;
+    private TextView seekbarNumber2;
     private Fragment1 fragment1;
     private ListView listView;
     int progress = 25/5;
+    int progress2 = 10;
 
 
     @Override
@@ -64,10 +78,48 @@ LoggedIn extends AppCompatActivity {
         //getting the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         seekbarNumber = (TextView) findViewById(R.id.seekbarNumber);
+        seekbarNumber2 = (TextView) findViewById(R.id.seekbarNumber2);
+        filterWithName = (EditText) findViewById(R.id.name);
+        filterWithCategory = (EditText) findViewById(R.id.category);
         Fragment1 f1 = new Fragment1();
         fragment1 = f1;
         listView = (ListView) findViewById(R.id.listview);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        filterWithCategory.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                fragment1.filterCategory(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        filterWithName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                fragment1.filterName(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
 
 
         //setting the title
@@ -79,6 +131,9 @@ LoggedIn extends AppCompatActivity {
         //Setup the pager
         setupViewPager(mViewPager);
         seekBar = (SeekBar) findViewById(R.id.seekBar2);
+        seekBar2 = (SeekBar) findViewById(R.id.seekBar);
+        seekBar2.setMax(41);
+        seekBar2.setProgress(progress2);
         seekBar.incrementProgressBy(5);
         seekBar.setMax(99/5);
         seekBar.setProgress(progress);
@@ -90,20 +145,6 @@ LoggedIn extends AppCompatActivity {
                 progress = (i*5) + 5;
                 seekbarNumber.setText(""+progress);
 
-                /*getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.container_admin, new Fragment1())
-                        .commit();
-
-
-                FragmentManager fm = getSupportFragmentManager();
-
-                Fragment1 awesome = (Fragment1)
-                        getSupportFragmentManager()
-                                .findFragmentById(R.id.container_admin);
-
-                ListView lw = findViewById(R.id.listview);
-                awesome.updateList(progress, lw, shopList);*/
                 fragment1.updateList(shopList, progress);
 
             }
@@ -118,6 +159,24 @@ LoggedIn extends AppCompatActivity {
 
                 }
                 });
+        seekBar2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                progress2 = i+1;
+                seekbarNumber2.setText(""+progress2);
+                fragment1.updateListTest(progress2, test1);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
                 mSectionsStatePagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
 
@@ -152,11 +211,36 @@ LoggedIn extends AppCompatActivity {
 
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     String id = child.getKey();
+                    System.out.println("First foreach loop" + id);
                     ArrayList<Shop> discountsBelongingToShop = new ArrayList<>();
-                    Log.d("idTest", id);
+                    //Log.d("idTest", id);
                     for (DataSnapshot child2 : child.getChildren()) {
+                        System.out.println("Second foreach loop" + child2.getKey());
+                        try {
+                            boolean olderThanCurrentDate;
+                            Date convertedDate = new Date();
+                            convertedDate = dateFormat.parse(child2.child("period").getValue().toString());
+                            Date parsed = convertedDate;
+                            Date dateNow = new Date(System.currentTimeMillis());
+                            if (dateNow.compareTo(parsed) == -1) {
+                                //DVS at parsed ikke er ældre end nuværende dato
+                                olderThanCurrentDate = false;
+                                System.out.println("datoen her skal ikke slettes " + convertedDate);
+                            } else {
+                                olderThanCurrentDate = true;
+                                System.out.println("Datoen er for gammel = SKAL SLETTES");
+                                database.child(child.getKey()).child(child2.getKey()).setValue(null);
+                            }
+
+
+                            //If compareTo
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        //Log.d(TAG, "onDataChange: " + child2.child("period").getValue().toString());
                         //loop gennnem tilbud her
                         // Log.d(TAG, "test" + child2.child("discount").getValue().toString());
+                        //if(Check hvis period er overskredet den nuværende dato)
                         Shop shop = new Shop(child2.child("category").getValue().toString(),
                                 child2.child("date").getValue().toString(),
                                 child2.child("description").getValue().toString(),
@@ -164,7 +248,8 @@ LoggedIn extends AppCompatActivity {
                                 child2.child("period").getValue().toString(),
                                 child2.child("price_after").getValue().toString(),
                                 child2.child("price_before").getValue().toString(),
-                                child2.child("title").getValue().toString());
+                                child2.child("title").getValue().toString(),
+                                child2.child("store").getValue().toString());
                         shopList.add(shop);
                         discountsBelongingToShop.add(shop);
                     }

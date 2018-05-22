@@ -11,8 +11,9 @@ public class Shop {
     private String priceafter;
     private String pricebefore;
     private String title;
+    private String store;
 
-    public Shop(String category, String date, String description, String discount, String period, String priceafter, String pricebefore, String title) {
+    public Shop(String category, String date, String description, String discount, String period, String priceafter, String pricebefore, String title, String store) {
         this.category = category;
         this.date = date;
         this.description = description;
@@ -21,8 +22,16 @@ public class Shop {
         this.priceafter = priceafter;
         this.pricebefore = pricebefore;
         this.title = title;
+        this.store = store;
     }
 
+    public String getStore() {
+        return store;
+    }
+
+    public void setStore(String store) {
+        this.store = store;
+    }
 
     public String getDate() {
         return date;

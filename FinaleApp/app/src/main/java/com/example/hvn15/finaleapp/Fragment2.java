@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static android.content.ContentValues.TAG;
 
@@ -57,6 +58,8 @@ Location location;
     View mView;
     ArrayList<Person> companies = new ArrayList<>();
     ArrayList<String> userNamesInRadius = new ArrayList<>();
+    static HashMap<String, Marker> markersMap = new HashMap<>();
+    static Marker myMarker;
     int min = 100;
     int max = 0;
 
@@ -107,7 +110,7 @@ Location location;
         Log.d("mapTest", location.toString());
 
         Marker marker1 = googleMap.addMarker(new MarkerOptions().position(new LatLng(/*location.getLatitude()*/55.957738, /*location.getLongitude()*/12.260400)).title("you").snippet("you are here"));
-
+        myMarker = marker1;
         //Marker marker2 = googleMap.addMarker(new MarkerOptions().position(new LatLng(55.933770,12.286840)).title("firma titel").snippet("firma addresse").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 
 
@@ -132,6 +135,7 @@ Location location;
         for(Person p : companies){
             if(p.getRole().equals("admin")){
                 Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(p.getLatitude(),p.getLongitude())).title(p.getTitle()).snippet(p.getAddress()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                markersMap.put(p.getUsername(), marker);
                 float[] results = new float[1];
                 Location.distanceBetween(marker1.getPosition().latitude, marker1.getPosition().longitude,
                         marker.getPosition().latitude, marker.getPosition().longitude,
