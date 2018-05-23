@@ -93,6 +93,7 @@ public class AdminFragment1 extends Fragment implements AdapterView.OnItemSelect
                 mapToFirebase.put("date", dateFormat.format(date));
                 mapToFirebase.put("price_before", "1000");
                 mapToFirebase.put("price_after", "300");
+                mapToFirebase.put("store", "kvickly");
                 //We made a counter
                 databaseReference.push().setValue(mapToFirebase);
                 //Log.d(TAG, "onClick: " + nowDate);
