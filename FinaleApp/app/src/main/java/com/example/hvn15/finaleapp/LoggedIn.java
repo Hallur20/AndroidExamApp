@@ -66,6 +66,7 @@ LoggedIn extends AppCompatActivity {
     private TextView seekbarNumber;
     private TextView seekbarNumber2;
     private Fragment1 fragment1;
+    private Fragment2 fragment2;
     private ListView listView;
     int progress = 25/5;
     int progress2 = 10;
@@ -83,6 +84,8 @@ LoggedIn extends AppCompatActivity {
         filterWithCategory = (EditText) findViewById(R.id.category);
         Fragment1 f1 = new Fragment1();
         fragment1 = f1;
+        Fragment2 f2 = new Fragment2();
+        fragment2 = f2;
         listView = (ListView) findViewById(R.id.listview);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -146,6 +149,7 @@ LoggedIn extends AppCompatActivity {
                 seekbarNumber.setText(""+progress);
 
                 fragment1.updateList(shopList, progress);
+                fragment2.removeMarkersDiscount(progress, test1);
 
             }
 

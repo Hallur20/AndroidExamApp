@@ -1,5 +1,7 @@
 package com.example.hvn15.finaleapp;
 
+import com.google.android.gms.maps.model.Marker;
+
 import java.util.Date;
 
 public class Shop {
@@ -12,6 +14,7 @@ public class Shop {
     private String pricebefore;
     private String title;
     private String store;
+    private Marker marker;
 
     public Shop(String category, String date, String description, String discount, String period, String priceafter, String pricebefore, String title, String store) {
         this.category = category;
@@ -23,6 +26,19 @@ public class Shop {
         this.pricebefore = pricebefore;
         this.title = title;
         this.store = store;
+    }
+
+    public Shop(String discount, Marker marker) {
+        this.discount = discount;
+        this.marker = marker;
+    }
+
+    public Marker getMarker() {
+        return marker;
+    }
+
+    public void setMarker(Marker marker) {
+        this.marker = marker;
     }
 
     public String getStore() {
@@ -107,9 +123,11 @@ public class Shop {
                 ", description='" + description + '\'' +
                 ", discount='" + discount + '\'' +
                 ", period='" + period + '\'' +
-                ", priceafter=" + priceafter +
-                ", pricebefore=" + pricebefore +
+                ", priceafter='" + priceafter + '\'' +
+                ", pricebefore='" + pricebefore + '\'' +
                 ", title='" + title + '\'' +
+                ", store='" + store + '\'' +
+                ", marker=" + marker +
                 '}';
     }
 }

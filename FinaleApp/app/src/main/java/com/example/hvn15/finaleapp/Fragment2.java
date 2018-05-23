@@ -39,6 +39,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static android.content.ContentValues.TAG;
 
@@ -59,6 +62,7 @@ Location location;
     ArrayList<Person> companies = new ArrayList<>();
     ArrayList<String> userNamesInRadius = new ArrayList<>();
     static HashMap<String, Marker> markersMap = new HashMap<>();
+    static ArrayList<Marker> markers = new ArrayList<>();
     static Marker myMarker;
     int min = 100;
     int max = 0;
@@ -135,6 +139,7 @@ Location location;
         for(Person p : companies){
             if(p.getRole().equals("admin")){
                 Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(p.getLatitude(),p.getLongitude())).title(p.getTitle()).snippet(p.getAddress()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                markers.add(marker);
                 markersMap.put(p.getUsername(), marker);
                 float[] results = new float[1];
                 Location.distanceBetween(marker1.getPosition().latitude, marker1.getPosition().longitude,
@@ -178,6 +183,42 @@ Location location;
         CameraPosition DK= CameraPosition.builder().target(new LatLng(/*location.getLatitude()*/55.957738, /*location.getLongitude()*/12.260400)).zoom(5).bearing(0).tilt(0).build();
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(DK));
     }
+    int counter = 0;
+    public void removeMarkersDiscount(int num, HashMap<String, ArrayList<Shop>> test1){
+                HashMap<String, ArrayList<Shop>> areDiscountsLegit = new HashMap<>(); //empty hashmap containing user key and their discounts
+                for(int x = 0; x < test1.size(); x++){
+                        areDiscountsLegit.put(test1.keySet().toArray()[x].toString(), test1.get(test1.keySet().toArray()[x])); //add the user keys and discounts from test1
+                }
+                for(int a = 0; a < areDiscountsLegit.size(); a++){ //then we loop through size of the list containing user key and their discounts
+                    ArrayList<Shop> currentDiscounts = new ArrayList<>(); //empty list containing discounts belonging to a user
+                    for(int u = 0; u <areDiscountsLegit.get(areDiscountsLegit.keySet().toArray()[a].toString()).size(); u++){
+                        currentDiscounts.add(areDiscountsLegit.get(areDiscountsLegit.keySet().toArray()[a].toString()).get(u)); //add the discounts from the corresponding key
+                    }
+                    String userKey = areDiscountsLegit.keySet().toArray()[a].toString(); //save current user key from current element in hash map
+                    for(int b = 0; b < currentDiscounts.size(); b++){ //loop through discounts belonging to a user
+                        if(Integer.parseInt(currentDiscounts.get(b).getDiscount()) <= num){
+                            counter++; //if seekbar number is less or same as the current element, add 1 to counter(because it's too low compared to the seekbar number)
+                        }
+                        if(counter == currentDiscounts.size()){ // this happens if the counter is equal to size, meaning all the discounts were too low.
+                            if(deletedMarkersWithCompanies.containsKey(userKey)){ //if the hash map that saves not visible markers/userkeys does not contain the userkey, then just add marker and user key to the hash map
+                                    deletedMarkersWithCompanies.get(userKey).add(new Shop(currentDiscounts.get(b).getDiscount(), markersMap.get(userKey))); //add to this hash map so we remember which markers are not visible
+                            } else { //else we make a new user key
+                                ArrayList<Shop> saveMarkers = new ArrayList<>();
+                                saveMarkers.add(new Shop(currentDiscounts.get(b).getDiscount(), markersMap.get(userKey))); //discount and marker gets saved in arraylist (so we can compare with seek number later)
+                                deletedMarkersWithCompanies.put(userKey, saveMarkers); //add the list to hash map with belonging user key
+                            }
+                            markersMap.get(userKey).setVisible(false); //now because the markers are saved, we can then set the marker's visibility to false
+                            counter = 0; //and then we restart counter for next time we loop through
+                        }
+                    }
+                    if(!deletedMarkersWithCompanies.isEmpty() && deletedMarkersWithCompanies.containsKey(userKey)){ //if saved markers hash map is not empty and contains the current user key
+                        for(int b = 0; b < deletedMarkersWithCompanies.get(userKey).size(); b++){ //loop through hash map
+                            if(Integer.parseInt(deletedMarkersWithCompanies.get(userKey).get(b).getDiscount()) >= num){ //if discount is higher or same as num
+                                markersMap.get(userKey).setVisible(true); //then make marker visible again
+                            }
+                        }
+                    }
+        }}
 
-
+private HashMap<String, ArrayList<Shop>> deletedMarkersWithCompanies = new HashMap<>();
 }
