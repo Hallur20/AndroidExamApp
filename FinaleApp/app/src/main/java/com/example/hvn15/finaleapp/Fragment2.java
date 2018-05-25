@@ -69,6 +69,8 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
 
     private static final String Tag = "Fragment2";
 
+    public static int maxKm = 0;
+
     private Button showMarkers;
 
     @Nullable
@@ -145,6 +147,10 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
                 Location.distanceBetween(marker1.getPosition().latitude, marker1.getPosition().longitude,
                         marker.getPosition().latitude, marker.getPosition().longitude,
                         results);
+                if (results[0] / 1000 > maxKm) {
+                    maxKm = Math.round(results[0] / 1000);
+                    ((LoggedIn) getActivity()).setMaxKmOnSeekBar(maxKm);
+                }
                 if (results[0] / 1000 < 500) {
                     userNamesInRadius.add(p.getUsername());
                 }
@@ -228,4 +234,120 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
 
     private ArrayList<Shop> currentDiscounts = new ArrayList<>(); //empty list containing discounts belonging to a user
     private HashMap<String, ArrayList<Shop>> deletedMarkersWithCompanies = new HashMap<>(); //empty hash map containing user key and highest discount beloning to marker (invisible markers will be saved here)
+
+    public void sortByKm(int num) {
+        for (int i = 0; i < markersMap.size(); i++) {
+            float[] distance = new float[1];
+            Location.distanceBetween(myMarker.getPosition().latitude, myMarker.getPosition().longitude,
+                    markersMap.get(markersMap.keySet().toArray()[i]).getPosition().latitude, markersMap.get(markersMap.keySet().toArray()[i]).getPosition().longitude,
+                    distance
+            );
+            if ((distance[0] / 1000) > num) {
+                markersMap.get(markersMap.keySet().toArray()[i]).setVisible(false);
+            } else {
+                markersMap.get(markersMap.keySet().toArray()[i]).setVisible(true);
+            }
+        }
+    }
+
+    public void sortByCategory(String category, HashMap<String, ArrayList<Shop>> test1) {
+        for (int i = 0; i < test1.size(); i++) {
+            String userKey = test1.keySet().toArray()[i].toString();
+            Log.d("fuck", userKey);
+            ArrayList<Shop> innerArray = new ArrayList<>();
+            innerArray = test1.get(test1.keySet().toArray()[i]);
+            Log.d("fuck", innerArray.toString());
+            boolean weCanShowMarker = false;
+            for (int j = 0; j < innerArray.size(); j++) {
+                if (innerArray.get(j).getCategory().contains(category)) {
+                    weCanShowMarker = true;
+                    break;
+                }
+            }
+            if (weCanShowMarker == true) {
+                markersMap.get(userKey).setVisible(true);
+                if(markerRules.contains(new MarkerRules("category", false, markersMap.get(userKey)))){
+                    int findIndex = markerRules.indexOf(new MarkerRules("category", false, markersMap.get(userKey)));
+                    markerRules.get(findIndex).areWeAllowed = true;
+                } else {
+                    if(!markerRules.contains(new MarkerRules("category", true, markersMap.get(userKey)))){
+                        markerRules.add(new MarkerRules("category", true, markersMap.get(userKey)));
+                    }
+                }
+            }
+    }
+    }
+    public void areWeAllowed(String filterCategory, Marker marker, String userKey){
+        if(markerRules.contains(new MarkerRules(filterCategory, false, marker))){
+            int findIndex = markerRules.indexOf(new MarkerRules(filterCategory, false, marker));
+            markerRules.get(findIndex).areWeAllowed = true;
+        } else {
+            if(!markerRules.contains(new MarkerRules(filterCategory, true, marker))){
+                markerRules.add(new MarkerRules(filterCategory, true, marker));
+            }
+        }
+        for(int i = 0; i < markerRules.size(); i++){
+            ArrayList<String> filterCategories = new ArrayList<>();
+            filterCategories.add("category"); filterCategories.add("name"); filterCategories.add("discount"); filterCategories.add("km");
+            for(int j = 0; j < filterCategories.size(); j++){
+                if(filterCategories.get(j).equals(filterCategory)){
+                    filterCategories.remove(j);
+                }
+            }
+            for(int k = 0; k <filterCategories.size(); k++){
+                if(filterCategories.get(k).equals(markerRules.get(i).getFilterType()) && markerRules.get(i).getAreWeAllowed() == true && markerRules.get(i).getMarker() == marker){
+                    markersMap.get(userKey).setVisible(true);
+                }
+            }
+
+        }
+    }
+
+    public void sortByName(String name, HashMap<String, ArrayList<Shop>> test1) {
+        for (int i = 0; i < test1.size(); i++) {
+            String userKey = test1.keySet().toArray()[i].toString();
+            ArrayList<Shop> checkStoreArray = new ArrayList<>();
+            checkStoreArray = test1.get(test1.keySet().toArray()[i]);
+            boolean checkStore = false;
+            for (int j = 0; j < checkStoreArray.size(); j++) {
+                if (checkStoreArray.get(j).getStore().equals(name)) {
+                    checkStore = true;
+                    break;
+                }
+            }
+            if (checkStore == true) {
+                markersMap.get(userKey).setVisible(true);
+                //markerRules.add(new MarkerRules(userKey, null, null, null, true, markersMap.get(userKey)));
+                markerRules.add(new MarkerRules("name", true, markersMap.get(userKey)));
+            } else {
+                markersMap.get(userKey).setVisible(false);
+                markerRules.add(new MarkerRules("name", false, markersMap.get(userKey)));
+            }
+        }
+    }
+    ArrayList<MarkerRules> markerRules = new ArrayList<>();
+    class MarkerRules{
+        private String filterType;
+        private boolean areWeAllowed;
+        private Marker marker;
+
+        public MarkerRules(String filterType, boolean areWeAllowed, Marker marker) {
+            this.filterType = filterType;
+            this.areWeAllowed = areWeAllowed;
+            this.marker = marker;
+        }
+
+        public String getFilterType() {
+            return filterType;
+        }
+
+        public boolean getAreWeAllowed() {
+            return areWeAllowed;
+        }
+
+        public Marker getMarker() {
+            return marker;
+        }
+    }
+
 }

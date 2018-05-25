@@ -97,12 +97,13 @@ LoggedIn extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                fragment1.filterCategory(charSequence.toString());
+
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                fragment1.filterCategory(editable.toString());
+                fragment2.sortByCategory(editable.toString(), test1);
             }
         });
 
@@ -114,12 +115,13 @@ LoggedIn extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                fragment1.filterName(charSequence.toString());
+
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                fragment1.filterName(editable.toString());
+                fragment2.sortByName(editable.toString(), test1);
             }
         });
 
@@ -135,7 +137,7 @@ LoggedIn extends AppCompatActivity {
         setupViewPager(mViewPager);
         seekBar = (SeekBar) findViewById(R.id.seekBar2);
         seekBar2 = (SeekBar) findViewById(R.id.seekBar);
-        seekBar2.setMax(41);
+        seekBar2.setMax(fragment2.maxKm -1);
         seekBar2.setProgress(progress2);
         seekBar.incrementProgressBy(5);
         seekBar.setMax(99/5);
@@ -169,6 +171,7 @@ LoggedIn extends AppCompatActivity {
                 progress2 = i+1;
                 seekbarNumber2.setText(""+progress2);
                 fragment1.updateListTest(progress2, test1);
+                fragment2.sortByKm(progress2);
             }
 
             @Override
@@ -334,6 +337,10 @@ LoggedIn extends AppCompatActivity {
 
     public void setViewPager(int fragmentNumber) {
         mViewPager.setCurrentItem(fragmentNumber);
+    }
+
+    public void setMaxKmOnSeekBar(int newNum){
+        seekBar2.setMax(newNum+6);
     }
 
 
