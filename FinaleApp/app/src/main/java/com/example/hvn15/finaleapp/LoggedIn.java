@@ -60,7 +60,7 @@ LoggedIn extends AppCompatActivity {
     public Location location;
     public Vibrator vibrator;
     private SeekBar seekBar;
-    private SeekBar seekBar2;
+    public SeekBar seekBar2;
     private EditText filterWithName;
     private EditText filterWithCategory;
     private TextView seekbarNumber;

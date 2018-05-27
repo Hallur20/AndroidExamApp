@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -33,6 +35,10 @@ public class AdminFragment1 extends Fragment implements AdapterView.OnItemSelect
     private static final String Tag = "AdminFragment1";
     private ScrollView scrollView;
     private EditText input_period;
+    private EditText input_day;
+    private EditText input_month;
+    private EditText input_year;
+    private EditText input_hour;
     private EditText input_title;
     private EditText input_description;
     private EditText input_discount;
@@ -44,7 +50,7 @@ public class AdminFragment1 extends Fragment implements AdapterView.OnItemSelect
     private long numbOfChildren;
 
     private String TAG = "hej";
-   DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     @Nullable
     @Override
@@ -54,6 +60,10 @@ public class AdminFragment1 extends Fragment implements AdapterView.OnItemSelect
         Log.d(TAG, "onCreateView: " + adminName);
         //scrollView = (ScrollView) view.findViewById(R.id.discount_scroll);
         input_period = (EditText) view.findViewById(R.id.input_period);
+        /*input_day = (EditText) view.findViewById(R.id.input_day);
+        input_month = (EditText) view.findViewById(R.id.input_month);
+        input_year = (EditText) view.findViewById(R.id.input_year);*/
+        input_hour = (EditText) view.findViewById(R.id.input_hour);
         input_title = (EditText) view.findViewById(R.id.input_title);
         input_discount = (EditText)view.findViewById(R.id.input_discount);
         input_description = (EditText) view.findViewById(R.id.input_description);
@@ -78,17 +88,28 @@ public class AdminFragment1 extends Fragment implements AdapterView.OnItemSelect
             }
         });
 
+
         add_discount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Date date = new Date();
                 String nowDate= dateFormat.format(date);
+                Date dateNow = new Date(System.currentTimeMillis());
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dateNow);
+                int input = Integer.parseInt(input_period.getText().toString());
+                int hour = Integer.parseInt(input_hour.getText().toString());
+                cal.add(Calendar.DATE, input);
+                cal.add(Calendar.HOUR, hour);
+                dateNow = cal.getTime();
+                String convert = dateFormat.format(dateNow);
+                System.out.println("HEJ" + dateNow.toString());
                 HashMap<String, String> mapToFirebase = new HashMap<>();
                 //Log.d(TAG, "onClick: " + selecetedCategory);
                 mapToFirebase.put("title", input_title.getText().toString());
                 mapToFirebase.put("category",selecetedCategory);
                 mapToFirebase.put("discount", input_discount.getText().toString());
-                mapToFirebase.put("period", input_period.getText().toString());
+                mapToFirebase.put("period", convert);
                 mapToFirebase.put("description", input_description.getText().toString());
                 mapToFirebase.put("date", dateFormat.format(date));
                 mapToFirebase.put("price_before", "1000");

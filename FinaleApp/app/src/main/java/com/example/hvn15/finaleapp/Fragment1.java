@@ -67,7 +67,7 @@ public class Fragment1 extends Fragment {
             ArrayList<String> filterTheseArticles = new ArrayList<>();
             float[] km = new float[1];
             Location.distanceBetween(fragment2.myMarker.getPosition().latitude, fragment2.myMarker.getPosition().longitude,
-                    fragment2.markersMap.get(fragment2.markersMap.keySet().toArray()[i]).getPosition().latitude, fragment2.markersMap.get(fragment2.markersMap.keySet().toArray()[i]).getPosition().longitude,
+                    fragment2.markersMap.get(fragment2.markersMap.keySet().toArray()[i]).getMarker().getPosition().latitude, fragment2.markersMap.get(fragment2.markersMap.keySet().toArray()[i]).getMarker().getPosition().longitude,
                     km);
             try {
                 if (km[0] / 1000 > num) {

@@ -6,194 +6,235 @@
 
     android:layout_height="match_parent">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true">
+    <TableLayout
 
-        <TableLayout
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="83dp">
+
+        <TableRow
+
+            android:id="@+id/category_table"
+
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:text="Category:" />
+
+
+            <Spinner
+                android:id="@+id/dropdown_category"
+                android:layout_width="287dp"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/btn_dropdown"
+
+                android:popupBackground="@color/colorPrimary" />
+
+        </TableRow>
+
+        <TableRow
+
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:text="Title" />
+
+            <EditText
+                android:id="@+id/input_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+        </TableRow>
+
+        <TableRow
+
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:text="Discount:" />
+
+            <EditText
+                android:id="@+id/input_discount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Discount"
+                android:inputType="number" />
+
+        </TableRow>
+
+        <TableRow
 
             android:layout_width="match_parent"
 
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="83dp">
-
-            <TableRow
-
-                android:id="@+id/category_table"
-
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-
-                    android:layout_width="wrap_content"
-
-                    android:layout_height="wrap_content"
-
-                    android:text="Category:" />
+            android:layout_gravity="center_horizontal"
+            >
 
 
-                <Spinner
-                    android:id="@+id/dropdown_category"
-                    android:layout_width="287dp"
-                    android:layout_height="wrap_content"
-                    android:background="@android:drawable/btn_dropdown"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                    android:popupBackground="@color/colorPrimary" />
+            </LinearLayout>
+        </TableRow>
 
-            </TableRow>
+        <TableRow
 
-            <TableRow
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:text="Days" />
+
+            <EditText
+                android:id="@+id/input_period"
+                android:layout_width="3dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" />
+
+        </TableRow>
+
+        <TableRow
+
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:text="hour" />
+
+            <EditText
+                android:id="@+id/input_hour"
+                android:layout_width="3dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" />
+
+        </TableRow>
+
+        <TableRow
+
+            android:layout_width="match_parent"
+
+            android:layout_height="59dp">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:text="Minutes" />
+
+            <EditText
+                android:id="@+id/input_minutes"
+                android:layout_width="3dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" />
+
+        </TableRow>
+
+        <TableRow
+
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:text="Description" />
+
+            <EditText
+
+                android:id="@+id/input_description"
+
 
                 android:layout_width="match_parent"
 
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
 
-                <TextView
+                android:layout_below="@+id/input_title"
 
-                    android:layout_width="wrap_content"
+                android:layout_weight="1"
 
-                    android:layout_height="wrap_content"
+                android:gravity="top|left"
 
-                    android:text="Discount:" />
+                android:hint="Description"
 
-                <EditText
-                    android:id="@+id/input_discount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Discount"
-                    android:inputType="number" />
+                android:inputType="textMultiLine"
 
-            </TableRow>
+                android:lines="4"
 
-            <TableRow
+                android:scrollHorizontally="false"
 
-                android:layout_width="match_parent"
+                android:scrollbars="vertical" />
+        </TableRow>
 
-                android:layout_height="wrap_content">
+        <TableRow
 
-                <TextView
+            android:layout_width="match_parent"
 
-                    android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
-                    android:layout_height="wrap_content"
+            <TextView
 
-                    android:text="Period:" />
+                android:layout_width="wrap_content"
 
-                <EditText
+                android:layout_height="wrap_content"
 
-                    android:id="@+id/input_period"
+                android:text=" " />
 
+            <Button
 
-                    android:layout_width="match_parent"
+                android:id="@+id/add_discount"
+                android:layout_weight="1"
 
-                    android:layout_height="wrap_content"
-
-                    android:layout_below="@+id/addEdit_period"
-
-                    android:layout_weight="1"
-
-                    android:hint="Period ex 1 uge" />
-            </TableRow>
-
-            <TableRow
-
-                android:layout_width="match_parent"
-
-                android:layout_height="wrap_content">
-
-                <TextView
-
-                    android:layout_width="wrap_content"
-
-                    android:layout_height="wrap_content"
-
-                    android:text="Title:" />
-
-                <EditText
-
-                    android:id="@+id/input_title"
-
-
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content"
-
-                    android:layout_below="@+id/addEdit_title"
-
-                    android:layout_weight="1"
-
-                    android:hint="Title" />
-            </TableRow>
-
-            <TableRow
-
-                android:layout_width="match_parent"
-
-                android:layout_height="wrap_content">
-
-                <TextView
-
-                    android:layout_width="wrap_content"
-
-                    android:layout_height="wrap_content"
-
-                    android:text="Description" />
-
-                <EditText
-
-                    android:id="@+id/input_description"
-
-
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content"
-
-                    android:layout_below="@+id/input_title"
-
-                    android:layout_weight="1"
-
-                    android:gravity="top|left"
-
-                    android:hint="Description"
-
-                    android:inputType="textMultiLine"
-
-                    android:lines="4"
-
-                    android:scrollHorizontally="false"
-
-                    android:scrollbars="vertical" />
-            </TableRow>
-
-            <TableRow
-
-                android:layout_width="match_parent"
-
-                android:layout_height="match_parent">
-
-                <TextView
-
-                    android:layout_width="wrap_content"
-
-                    android:layout_height="wrap_content"
-
-                    android:text=" " />
-
-                <Button
-
-                    android:id="@+id/add_discount"
-                    android:layout_weight="1"
-
-                    android:text="Add Discount " />
-            </TableRow>
-        </TableLayout>
-    </ScrollView>
+                android:text="Add Discount " />
+        </TableRow>
+    </TableLayout>
 
     <TextView
         android:id="@+id/textView2"
