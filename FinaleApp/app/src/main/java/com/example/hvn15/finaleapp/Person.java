@@ -10,11 +10,13 @@ public class Person implements Serializable {
     private Double longitude;
     private String title;
     private String address;
+    private int maximumDistance;
 
-    public Person(String role, String username, String password) {
+    public Person(String role, String username, String password, int maximumDistance) {
         this.role = role;
         this.username = username;
         this.password = password;
+        this.maximumDistance = maximumDistance;
     }
 
     public Person(String role, String username, String password, Double latitude, Double longitude, String title, String address) {
@@ -33,6 +35,14 @@ public class Person implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getMaximumDistance() {
+        return maximumDistance;
+    }
+
+    public void setMaximumDistance(int mininumDistance) {
+        this.maximumDistance = mininumDistance;
     }
 
     public String getAddress() {

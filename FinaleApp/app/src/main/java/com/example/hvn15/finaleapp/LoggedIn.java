@@ -8,7 +8,6 @@ import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,12 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -35,8 +31,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,6 +42,7 @@ public class
 LoggedIn extends AppCompatActivity {
     private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     private static final String TAG = "LoggedIn";
+    public String userName;
     public ArrayList<Shop> shopList = new ArrayList<>();
     public ArrayList<Person> users = new ArrayList<>();
     public HashMap<String, ArrayList<Shop>> test1 = new HashMap<>();
@@ -68,8 +63,10 @@ LoggedIn extends AppCompatActivity {
     private Fragment1 fragment1;
     private Fragment2 fragment2;
     private ListView listView;
+    public DatabaseReference database2;
     int progress = 25/5;
     int progress2 = 10;
+    int maxKm;
 
 
     @Override
@@ -88,6 +85,8 @@ LoggedIn extends AppCompatActivity {
         fragment2 = f2;
         listView = (ListView) findViewById(R.id.listview);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        database2 = FirebaseDatabase.getInstance().getReference().child("users").child(getIntent().getExtras().getString("userName")).child("maximumDistance");
 
         filterWithCategory.addTextChangedListener(new TextWatcher() {
             @Override
@@ -169,6 +168,7 @@ LoggedIn extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 progress2 = i+1;
+                database2.setValue(progress2);
                 seekbarNumber2.setText(""+progress2);
                 fragment1.updateListTest(progress2, test1);
                 fragment2.sortByKm(progress2);
@@ -206,6 +206,9 @@ LoggedIn extends AppCompatActivity {
         Log.d(TAG, "onCreate: Started.");
         Bundle extras = getIntent().getExtras();
         hej = extras.getString("hello");
+        maxKm = extras.getInt("maximumDistance");
+        userName = extras.getString("userName");
+        Log.d("isKm", maxKm +"");
         database = FirebaseDatabase.getInstance().getReference().child("data");
         users = (ArrayList<Person>) getIntent().getSerializableExtra("users");
 

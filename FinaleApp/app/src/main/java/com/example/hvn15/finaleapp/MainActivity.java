@@ -68,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
                         pList.add(new Person(
                                 child.child("role").getValue().toString(),
                                 child.child("username").getValue().toString(),
-                                child.child("password").getValue().toString()
+                                child.child("password").getValue().toString(),
+                                Integer.parseInt(child.child("maximumDistance").getValue().toString())
                         ));
                     }
                 }
@@ -97,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
                 String name = pList.get(i).getUsername();
                 intent.putExtra("hello", name);
                 intent.putExtra("users", pList);
+                intent.putExtra("userName", pList.get(i).getUsername());
+                intent.putExtra("maximumDistance", pList.get(i).getMaximumDistance());
                 startActivity(intent);
 
 

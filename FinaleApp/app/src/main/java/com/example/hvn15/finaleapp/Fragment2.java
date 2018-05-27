@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -28,7 +29,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class Fragment2 extends Fragment implements OnMapReadyCallback {
@@ -52,7 +52,6 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
     static Marker myMarker;
     int min = 100;
     int max = 0;
-
     private static final String Tag = "Fragment2";
 
     public static int maxKm = 0;
@@ -64,6 +63,11 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment2_layout, container, false);
         companies = ((LoggedIn) getActivity()).users;
+
+        Log.d("zxc" , ((LoggedIn)getActivity()).userName);
+
+
+
 
         Log.d(Tag, companies.toString());
         return mView;
@@ -130,12 +134,14 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
 
             ((LoggedIn) getActivity()).vibrator.vibrate(400);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), "2"); //helps constructing the typical notification layouts
-            builder.setContentTitle("There are: " + userNamesInRadius.size() + " stores near you! (in a 500 km radius)"); //sets the string to be shown as a title for the notification
+            builder.setContentTitle("There are: " + userNamesInRadius.size() + " stores near you! (in a " + ((LoggedIn)getActivity()).maxKm + " km radius)"); //sets the string to be shown as a title for the notification
             builder.setContentText("discounts go from: " + min + "% to " + max + "%"); //sets the string to be shown as the context text for the notification
             builder.setSmallIcon(R.mipmap.ic_launcher); //sets an image as an icon for the notification
             Notification notification = builder.build(); //we are done and we parse the build to be of the type 'Notification'
             NotificationManager nm = (NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE); //has some tools for notifications, in this case we are looking for 'notify'
             nm.notify(3, notification); //notify sends the notification
+            MediaPlayer mp = MediaPlayer.create(getActivity(), R.raw.ding);
+            mp.start();
         }
 
 
@@ -159,7 +165,7 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
                 maxKm = Math.round(results[0] / 1000);
                 ((LoggedIn) getActivity()).setMaxKmOnSeekBar(maxKm); //also add the marker that is furthest away to maximum on seekbar
             }
-            ((LoggedIn)getActivity()).seekBar2.setProgress(maxKm);
+            ((LoggedIn)getActivity()).seekBar2.setProgress((((LoggedIn) getActivity()).maxKm));
             if (results[0] / 1000 < ((LoggedIn)getActivity()).progress2) {
                 userNamesInRadius.add(p.getUsername()); // also add the markers that are in a radius of 500 km (this is hardcoded) to a list, this is for the notification showing nearby stores
             }
@@ -212,6 +218,7 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
     private HashMap<String, ArrayList<Shop>> deletedMarkersWithCompanies = new HashMap<>(); //empty hash map containing user key and highest discount beloning to marker (invisible markers will be saved here)
 
     public void sortByKm(int num) {
+
         for (int i = 0; i < markersMap.size(); i++) {
             float[] distance = new float[1];
             Location.distanceBetween(myMarker.getPosition().latitude, myMarker.getPosition().longitude,
