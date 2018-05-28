@@ -1,4 +1,4 @@
-package com.example.hvn15.finaleapp;
+package com.example.hvn15.finaleapp.adminFragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,13 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.hvn15.finaleapp.R;
 
-public class AdminFragment3 extends Fragment {
 
-    private static final String Tag = "AdminFragment1";
+public class AccountFragment extends Fragment {
 
     private TextView textView;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

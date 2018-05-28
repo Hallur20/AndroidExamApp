@@ -110,44 +110,6 @@
 
             android:layout_height="match_parent">
 
-            <TextView
-
-                android:layout_width="wrap_content"
-
-                android:layout_height="wrap_content"
-
-                android:text="Days" />
-
-            <EditText
-                android:id="@+id/input_period"
-                android:layout_width="3dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number" />
-
-        </TableRow>
-
-        <TableRow
-
-            android:layout_width="match_parent"
-
-            android:layout_height="match_parent">
-
-            <TextView
-
-                android:layout_width="wrap_content"
-
-                android:layout_height="wrap_content"
-
-                android:text="hour" />
-
-            <EditText
-                android:id="@+id/input_hour"
-                android:layout_width="3dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number" />
-
         </TableRow>
 
         <TableRow
@@ -157,19 +119,16 @@
             android:layout_height="59dp">
 
             <TextView
-
+                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
-
                 android:layout_height="wrap_content"
+                android:text="Tilbud slut" />
 
-                android:text="Minutes" />
-
-            <EditText
-                android:id="@+id/input_minutes"
-                android:layout_width="3dp"
+            <Button
+                android:id="@+id/dateTimeBtn"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number" />
+                android:text="Vælg Udløbsdato" />
 
         </TableRow>
 

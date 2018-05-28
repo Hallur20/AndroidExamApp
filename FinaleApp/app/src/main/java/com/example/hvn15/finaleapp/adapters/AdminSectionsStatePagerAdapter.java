@@ -1,4 +1,4 @@
-package com.example.hvn15.finaleapp;
+package com.example.hvn15.finaleapp.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,7 +19,6 @@ public class AdminSectionsStatePagerAdapter extends FragmentStatePagerAdapter {
         mfragmentList.add(fragment);
         mfragmentTitleList.add(title);
     }
-
     @Override
     public Fragment getItem(int position) {
         return mfragmentList.get(position);

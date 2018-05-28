@@ -1,4 +1,4 @@
-package com.example.hvn15.finaleapp;
+package com.example.hvn15.finaleapp.objectClasses;
 
 import com.google.android.gms.maps.model.Marker;
 
@@ -37,16 +37,9 @@ public class Shop {
         return marker;
     }
 
-    public void setMarker(Marker marker) {
-        this.marker = marker;
-    }
 
     public String getStore() {
         return store;
-    }
-
-    public void setStore(String store) {
-        this.store = store;
     }
 
     public String getDate() {

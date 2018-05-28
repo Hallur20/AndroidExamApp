@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoggedInAdmin">
+    tools:context="com.example.hvn15.finaleapp.activities.LoggedInAdmin">
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation_admin"

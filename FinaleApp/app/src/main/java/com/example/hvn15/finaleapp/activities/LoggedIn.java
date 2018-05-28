@@ -1,30 +1,41 @@
-package com.example.hvn15.finaleapp;
+package com.example.hvn15.finaleapp.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hvn15.finaleapp.customerFragments.AccountFragment;
+import com.example.hvn15.finaleapp.customerFragments.DiscountListFragment;
+import com.example.hvn15.finaleapp.customerFragments.MapFragment;
+import com.example.hvn15.finaleapp.objectClasses.Person;
+import com.example.hvn15.finaleapp.R;
+import com.example.hvn15.finaleapp.adapters.SectionsStatePagerAdapter;
+import com.example.hvn15.finaleapp.objectClasses.Shop;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,62 +49,63 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class
-LoggedIn extends AppCompatActivity {
+
+public class LoggedIn extends AppCompatActivity {
+
     private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-    private static final String TAG = "LoggedIn";
     public String userName;
-    public ArrayList<Shop> shopList = new ArrayList<>();
+    public ArrayList<Shop> discountsFromFirebase = new ArrayList<>();
     public ArrayList<Person> users = new ArrayList<>();
-    public HashMap<String, ArrayList<Shop>> test1 = new HashMap<>();
-    private DatabaseReference database;
+    public HashMap<String, ArrayList<Shop>> adminDiscountsMap = new HashMap<>();
+    private DatabaseReference allDiscountsFirebase;
     private SectionsStatePagerAdapter mSectionsStatePagerAdapter;
     private ViewPager mViewPager;
-    public String hej;
-    private static final int LOCATION_REQUEST_CODE = 101;
-    private Button btnNavSecondActivity;
     public Location location;
     public Vibrator vibrator;
-    private SeekBar seekBar;
-    public SeekBar seekBar2;
+    private SeekBar seekBarDiscount;
+    public SeekBar seekbarDistance;
     private EditText filterWithName;
     private EditText filterWithCategory;
     private TextView seekbarNumber;
     private TextView seekbarNumber2;
-    private Fragment1 fragment1;
-    private Fragment2 fragment2;
+    private DiscountListFragment fragment1;
+    private MapFragment mapFragment;
     private ListView listView;
-    public DatabaseReference database2;
-    int progress = 25/5;
-    int progress2 = 10;
-    int maxKm;
-
+    public DatabaseReference maximumDistanceFirebase;
+    public int discountNumOnSeekbar = 25 / 5;
+    public int distanceNumOnSeekbar = 10;
+    public int maxKm;
+    private Button popUpBtn;
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in);
-        //getting the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        seekbarNumber = (TextView) findViewById(R.id.seekbarNumber);
-        seekbarNumber2 = (TextView) findViewById(R.id.seekbarNumber2);
-        filterWithName = (EditText) findViewById(R.id.name);
-        filterWithCategory = (EditText) findViewById(R.id.category);
-        Fragment1 f1 = new Fragment1();
+
+        seekbarNumber = findViewById(R.id.seekbarNumber);
+        popUpBtn = findViewById(R.id.popUpButn);
+        popUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoggedIn.this, Pop.class));
+            }
+        });
+        seekbarNumber2 = findViewById(R.id.seekbarNumber2);
+        filterWithName = findViewById(R.id.name);
+        filterWithCategory = findViewById(R.id.category);
+        DiscountListFragment f1 = new DiscountListFragment();
         fragment1 = f1;
-        Fragment2 f2 = new Fragment2();
-        fragment2 = f2;
-        listView = (ListView) findViewById(R.id.listview);
+        MapFragment f2 = new MapFragment();
+        mapFragment = f2;
+        listView = findViewById(R.id.listview);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-        database2 = FirebaseDatabase.getInstance().getReference().child("users").child(getIntent().getExtras().getString("userName")).child("maximumDistance");
-
+        maximumDistanceFirebase = FirebaseDatabase.getInstance().getReference().child("users").child(getIntent().getExtras().getString("userName")).child("maximumDistance");
         filterWithCategory.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -102,76 +114,44 @@ LoggedIn extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 fragment1.filterCategory(editable.toString());
-                fragment2.sortByCategory(editable.toString(), test1);
+                mapFragment.sortByCategory(editable.toString(), adminDiscountsMap);
             }
         });
 
         filterWithName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
                 fragment1.filterName(editable.toString());
-                fragment2.sortByName(editable.toString(), test1);
+                mapFragment.sortByName(editable.toString(), adminDiscountsMap);
             }
+
         });
 
-
-
-        //setting the title
-        toolbar.setTitle("My Toolbar");
-
-        //placing toolbar in place of actionbar
-        setSupportActionBar(toolbar);
-        mViewPager = (ViewPager) findViewById(R.id.container_admin);
+        mViewPager = findViewById(R.id.container_admin);
         //Setup the pager
         setupViewPager(mViewPager);
-        seekBar = (SeekBar) findViewById(R.id.seekBar2);
-        seekBar2 = (SeekBar) findViewById(R.id.seekBar);
-        seekBar2.setMax(fragment2.maxKm -1);
-        seekBar2.setProgress(progress2);
-        seekBar.incrementProgressBy(5);
-        seekBar.setMax(99/5);
-        seekBar.setProgress(progress);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekBarDiscount = findViewById(R.id.discountSeekbar);
+        seekbarDistance = findViewById(R.id.seekBar);
+        seekbarDistance.setMax(mapFragment.maxKm - 1);
+        seekbarDistance.setProgress(distanceNumOnSeekbar);
+        seekBarDiscount.incrementProgressBy(5);
+        seekBarDiscount.setMax(99 / 5);
+        seekBarDiscount.setProgress(discountNumOnSeekbar);
+        seekBarDiscount.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                progress = i/5;
-                progress = (i*5) + 5;
-                seekbarNumber.setText(""+progress);
-
-                fragment1.updateList(shopList, progress);
-                fragment2.removeMarkersDiscount(progress, test1);
-
-            }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                }
-                });
-        seekBar2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                progress2 = i+1;
-                database2.setValue(progress2);
-                seekbarNumber2.setText(""+progress2);
-                fragment1.updateListTest(progress2, test1);
-                fragment2.sortByKm(progress2);
+                discountNumOnSeekbar = i / 5;
+                discountNumOnSeekbar = (i * 5) + 5;
+                seekbarNumber.setText("" + discountNumOnSeekbar);
+                fragment1.updateList(discountsFromFirebase, discountNumOnSeekbar);
+                mapFragment.sortByDiscount(discountNumOnSeekbar, adminDiscountsMap);
             }
 
             @Override
@@ -185,72 +165,59 @@ LoggedIn extends AppCompatActivity {
             }
         });
 
-                mSectionsStatePagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
+        seekbarDistance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                distanceNumOnSeekbar = i + 1;
+                maximumDistanceFirebase.setValue(distanceNumOnSeekbar);
+                seekbarNumber2.setText("" + distanceNumOnSeekbar);
+                fragment1.checkIfDiscountIsInRadius(distanceNumOnSeekbar, adminDiscountsMap);
+                mapFragment.sortByKm(distanceNumOnSeekbar);
 
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+        });
+
+        mSectionsStatePagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
+
         }
         location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        Log.d("loggedinTest", location.toString());
-
-
-        Log.d(TAG, "onCreate: Started.");
         Bundle extras = getIntent().getExtras();
-        hej = extras.getString("hello");
         maxKm = extras.getInt("maximumDistance");
         userName = extras.getString("userName");
-        Log.d("isKm", maxKm +"");
-        database = FirebaseDatabase.getInstance().getReference().child("data");
+        allDiscountsFirebase = FirebaseDatabase.getInstance().getReference().child("data");
         users = (ArrayList<Person>) getIntent().getSerializableExtra("users");
-
-
-
-
-        database.addValueEventListener(new ValueEventListener() {
+        allDiscountsFirebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     String id = child.getKey();
-                    System.out.println("First foreach loop" + id);
                     ArrayList<Shop> discountsBelongingToShop = new ArrayList<>();
-                    //Log.d("idTest", id);
                     for (DataSnapshot child2 : child.getChildren()) {
-                        System.out.println("Second foreach loop" + child2.getKey());
                         try {
-                            boolean olderThanCurrentDate;
                             Date convertedDate = new Date();
                             convertedDate = dateFormat.parse(child2.child("period").getValue().toString());
                             Date parsed = convertedDate;
                             Date dateNow = new Date(System.currentTimeMillis());
-                            if (dateNow.compareTo(parsed) == -1) {
-                                //DVS at parsed ikke er ældre end nuværende dato
-                                olderThanCurrentDate = false;
-                                System.out.println("datoen her skal ikke slettes " + convertedDate);
-                            } else {
-                                olderThanCurrentDate = true;
-                                System.out.println("Datoen er for gammel = SKAL SLETTES");
-                                database.child(child.getKey()).child(child2.getKey()).setValue(null);
+                            if (dateNow.compareTo(parsed) != -1) {
+                                allDiscountsFirebase.child(child.getKey()).child(child2.getKey()).setValue(null);
+                                //If the result is 1, the date is newer than the current date.
                             }
-
-
-                            //If compareTo
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        //Log.d(TAG, "onDataChange: " + child2.child("period").getValue().toString());
-                        //loop gennnem tilbud her
-                        // Log.d(TAG, "test" + child2.child("discount").getValue().toString());
-                        //if(Check hvis period er overskredet den nuværende dato)
+
                         Shop shop = new Shop(child2.child("category").getValue().toString(),
                                 child2.child("date").getValue().toString(),
                                 child2.child("description").getValue().toString(),
@@ -260,26 +227,21 @@ LoggedIn extends AppCompatActivity {
                                 child2.child("price_before").getValue().toString(),
                                 child2.child("title").getValue().toString(),
                                 child2.child("store").getValue().toString());
-                        shopList.add(shop);
+                        discountsFromFirebase.add(shop);
                         discountsBelongingToShop.add(shop);
                     }
-                    test1.put(id, discountsBelongingToShop);
+                    adminDiscountsMap.put(id, discountsBelongingToShop);
                 }
-                Log.d("hash", test1.toString());
-                fragment1.updateList(shopList, 0); //makes a default homescreen for the CustomAdapter list
+                fragment1.updateList(discountsFromFirebase, 0); //makes a default homescreen for the CustomAdapter list
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 
-        Log.d(TAG, hej.toString());
-
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        //btnNavSecondActivity = (Button) findViewById(R.id.btnNavSecondActivity);
-
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -297,44 +259,37 @@ LoggedIn extends AppCompatActivity {
                 return true;
             }
         });
-
-
     }
 
     @Override
-    //calling the top toolbar menu options
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu, menu);
         return true;
     }
 
-    // when you select an option from the toolbar  menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
+
             case R.id.menuAbout:
                 Toast.makeText(this, "You clicked about", Toast.LENGTH_SHORT).show();
                 break;
-
             case R.id.menuSettings:
                 Toast.makeText(this, "You clicked settings", Toast.LENGTH_SHORT).show();
                 break;
-
             case R.id.menuLogout:
                 Toast.makeText(this, "You clicked logout", Toast.LENGTH_SHORT).show();
                 break;
-
         }
         return true;
     }
 
     private void setupViewPager(ViewPager viewPager) {
         SectionsStatePagerAdapter adapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new Fragment1(), "Fragment1");
-        adapter.addFragment(new Fragment2(), "Fragment2");
-        adapter.addFragment(new Fragment3(), "Fragment3");
+        adapter.addFragment(new DiscountListFragment(), "DiscountListFragment");
+        adapter.addFragment(new MapFragment(), "MapFragment");
+        adapter.addFragment(new AccountFragment(), "AccountFragment");
         viewPager.setAdapter(adapter);
     }
 
@@ -342,9 +297,7 @@ LoggedIn extends AppCompatActivity {
         mViewPager.setCurrentItem(fragmentNumber);
     }
 
-    public void setMaxKmOnSeekBar(int newNum){
-        seekBar2.setMax(newNum+6);
+    public void setMaxKmOnSeekBar(int newNum) {
+        seekbarDistance.setMax(newNum + 6);
     }
-
-
 }

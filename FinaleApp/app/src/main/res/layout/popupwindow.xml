@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eeeeee">
+
+    <Spinner
+        android:id="@+id/dropdown_category"
+        android:layout_width="127dp"
+        android:layout_height="21dp"
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/nameText"
+        android:layout_marginEnd="99dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:popupBackground="@color/colorPrimary" />
+
+    <SeekBar
+        android:id="@+id/discountSeekbar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="158dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="61dp"
+        android:layout_marginTop="13dp"
+        android:max="10"
+        android:progress="3" />
+
+    <SeekBar
+        android:id="@+id/distanceSeekbar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="158dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/discountSeekbar"
+        android:layout_below="@+id/discountSeekbar"
+        android:max="10"
+        android:progress="3" />
+
+    <EditText
+        android:id="@+id/nameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/textView4"
+        android:layout_marginTop="61dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:textSize="9sp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView6"
+        android:layout_below="@+id/discountSeekbar"
+        android:text="max distance" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/discountSeekbar"
+        android:text="minimum discount" />
+
+    <TextView
+        android:id="@+id/distanceNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/discountSeekbar"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/discountNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/discountSeekbar"
+        android:text="TextView" /><![CDATA[
+
+
+
+    ...
+    android:background="@android:drawable/editbox_background" />
+
+]]>
+</RelativeLayout>

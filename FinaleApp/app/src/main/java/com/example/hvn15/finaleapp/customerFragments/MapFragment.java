@@ -1,4 +1,4 @@
-package com.example.hvn15.finaleapp;
+package com.example.hvn15.finaleapp.customerFragments;
 
 import android.Manifest;
 import android.app.Notification;
@@ -15,8 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
+import com.example.hvn15.finaleapp.activities.LoggedIn;
+import com.example.hvn15.finaleapp.objectClasses.Person;
+import com.example.hvn15.finaleapp.R;
+import com.example.hvn15.finaleapp.objectClasses.Shop;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -31,10 +34,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Fragment2 extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback {
 
-    public Fragment2() {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,39 +45,28 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
     Location location;
     GoogleMap mGoogleMap;
     MapView mMapView;
-    View mView;
+    View mapView;
     ArrayList<Person> companies = new ArrayList<>();
     ArrayList<String> userNamesInRadius = new ArrayList<>();
-    static HashMap<String, MarkerRules> markersMap = new HashMap<>();
+    public static HashMap<String, MarkerRules> markersMap = new HashMap<>();
     static ArrayList<Marker> markers = new ArrayList<>();
     static Marker myMarker;
-    int min = 100;
-    int max = 0;
-    private static final String Tag = "Fragment2";
-
+    int minDiscount = 100;
+    int maxDiscount = 0;
     public static int maxKm = 0;
-
-    private Button showMarkers;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment2_layout, container, false);
+        mapView = inflater.inflate(R.layout.fragment2_layout, container, false);
         companies = ((LoggedIn) getActivity()).users;
-
-        Log.d("zxc" , ((LoggedIn)getActivity()).userName);
-
-
-
-
-        Log.d(Tag, companies.toString());
-        return mView;
+        return mapView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle saveInstanceState) {
         super.onViewCreated(view, saveInstanceState);
-        mMapView = (MapView) mView.findViewById(R.id.map);
+        mMapView = mapView.findViewById(R.id.map);
         if (mMapView != null) {
             mMapView.onCreate(null);
             mMapView.onResume();
@@ -89,42 +79,32 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
         MapsInitializer.initialize(getContext());
         mGoogleMap = googleMap;
 
-
         googleMap.setMapType(googleMap.MAP_TYPE_NORMAL);
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         googleMap.setMyLocationEnabled(true);
         location = ((LoggedIn) getActivity()).location;
-        Log.d("mapTest", location.toString());
 
         Marker marker1 = googleMap.addMarker(new MarkerOptions().position(new LatLng(/*location.getLatitude()*/55.957738, /*location.getLongitude()*/12.260400)).title("you").snippet("you are here"));
         myMarker = marker1;
 
         for (Person p : companies) {
             if (p.getRole().equals("admin")) {
-                HashMap<String, ArrayList<Shop>> test1 = (((LoggedIn) getActivity()).test1);
+                HashMap<String, ArrayList<Shop>> test1 = (((LoggedIn) getActivity()).adminDiscountsMap);
                 ifAdminHasDiscountsCreateMarker(p, test1, marker1);
             }
         }
-        for (int i = 0; i < ((LoggedIn) getActivity()).test1.size(); i++) {
+        for (int i = 0; i < ((LoggedIn) getActivity()).adminDiscountsMap.size(); i++) {
             for (int j = 0; j < userNamesInRadius.size(); j++) {
-                if (((LoggedIn) getActivity()).test1.containsKey(userNamesInRadius.get(j))) {
-                    for (int k = 0; k < ((LoggedIn) getActivity()).test1.get(userNamesInRadius.get(j)).size(); k++) {
-                        if (Integer.parseInt(((LoggedIn) getActivity()).test1.get(userNamesInRadius.get(j)).get(k).getDiscount()) < min) {
-                            min = Integer.parseInt(((LoggedIn) getActivity()).test1.get(userNamesInRadius.get(j)).get(k).getDiscount());
+                if (((LoggedIn) getActivity()).adminDiscountsMap.containsKey(userNamesInRadius.get(j))) {
+                    for (int k = 0; k < ((LoggedIn) getActivity()).adminDiscountsMap.get(userNamesInRadius.get(j)).size(); k++) {
+                        if (Integer.parseInt(((LoggedIn) getActivity()).adminDiscountsMap.get(userNamesInRadius.get(j)).get(k).getDiscount()) < minDiscount) {
+                            minDiscount = Integer.parseInt(((LoggedIn) getActivity()).adminDiscountsMap.get(userNamesInRadius.get(j)).get(k).getDiscount());
                         }
-                        if (Integer.parseInt(((LoggedIn) getActivity()).test1.get(userNamesInRadius.get(j)).get(k).getDiscount()) > max) {
-                            max = Integer.parseInt(((LoggedIn) getActivity()).test1.get(userNamesInRadius.get(j)).get(k).getDiscount());
+                        if (Integer.parseInt(((LoggedIn) getActivity()).adminDiscountsMap.get(userNamesInRadius.get(j)).get(k).getDiscount()) > maxDiscount) {
+                            maxDiscount = Integer.parseInt(((LoggedIn) getActivity()).adminDiscountsMap.get(userNamesInRadius.get(j)).get(k).getDiscount());
                         }
-                        Log.d("markerTest", min + ", " + max);
                     }
                 }
             }
@@ -134,8 +114,8 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
 
             ((LoggedIn) getActivity()).vibrator.vibrate(400);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), "2"); //helps constructing the typical notification layouts
-            builder.setContentTitle("There are: " + userNamesInRadius.size() + " stores near you! (in a " + ((LoggedIn)getActivity()).maxKm + " km radius)"); //sets the string to be shown as a title for the notification
-            builder.setContentText("discounts go from: " + min + "% to " + max + "%"); //sets the string to be shown as the context text for the notification
+            builder.setContentTitle("There are: " + userNamesInRadius.size() + " stores near you! (in a " + ((LoggedIn) getActivity()).maxKm + " km radius)"); //sets the string to be shown as a title for the notification
+            builder.setContentText("discounts go from: " + minDiscount + "% to " + maxDiscount + "%"); //sets the string to be shown as the context text for the notification
             builder.setSmallIcon(R.mipmap.ic_launcher); //sets an image as an icon for the notification
             Notification notification = builder.build(); //we are done and we parse the build to be of the type 'Notification'
             NotificationManager nm = (NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE); //has some tools for notifications, in this case we are looking for 'notify'
@@ -148,8 +128,6 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
         CameraPosition DK = CameraPosition.builder().target(new LatLng(/*location.getLatitude()*/55.957738, /*location.getLongitude()*/12.260400)).zoom(5).bearing(0).tilt(0).build();
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(DK));
     }
-
-
     int counter = 0;
 
     public void ifAdminHasDiscountsCreateMarker(Person p, HashMap<String, ArrayList<Shop>> test1, Marker marker1) {
@@ -165,14 +143,14 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
                 maxKm = Math.round(results[0] / 1000);
                 ((LoggedIn) getActivity()).setMaxKmOnSeekBar(maxKm); //also add the marker that is furthest away to maximum on seekbar
             }
-            ((LoggedIn)getActivity()).seekBar2.setProgress((((LoggedIn) getActivity()).maxKm));
-            if (results[0] / 1000 < ((LoggedIn)getActivity()).progress2) {
+            ((LoggedIn) getActivity()).seekbarDistance.setProgress((((LoggedIn) getActivity()).maxKm));
+            if (results[0] / 1000 < ((LoggedIn) getActivity()).distanceNumOnSeekbar) {
                 userNamesInRadius.add(p.getUsername()); // also add the markers that are in a radius of 500 km (this is hardcoded) to a list, this is for the notification showing nearby stores
             }
         }
     }
 
-    public void removeMarkersDiscount(int num, HashMap<String, ArrayList<Shop>> test1) {
+    public void sortByDiscount(int num, HashMap<String, ArrayList<Shop>> test1) {
         HashMap<String, ArrayList<Shop>> areDiscountsLegit = new HashMap<>(); //empty hashmap containing user key and their discounts
 
         for (int x = 0; x < test1.size(); x++) {
@@ -206,7 +184,6 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
             if (!deletedMarkersWithCompanies.isEmpty() && deletedMarkersWithCompanies.containsKey(userKey)) { //if saved markers hash map is not empty and contains the current user key
                 for (int b = 0; b < deletedMarkersWithCompanies.get(userKey).size(); b++) { //loop through hash map
                     if (Integer.parseInt(deletedMarkersWithCompanies.get(userKey).get(b).getDiscount()) >= num) { //if discount is higher or same as num
-                        //markersMap.get(userKey).getMarker().setVisible(true);
                         areWeAllowed("discount", true, userKey);
                     }
                 }
@@ -243,21 +220,13 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
             ArrayList<Shop> innerArray = new ArrayList<>();
 
             innerArray = test1.get(test1.keySet().toArray()[i]);
-
-
             boolean weCanShowMarker = false;
-
             for (int j = 0; j < innerArray.size(); j++) {
-
                 if (innerArray.get(j).getCategory().contains(category)) {
-
                     weCanShowMarker = true;
-
                     break;
-
                 }
             }
-
             if (weCanShowMarker == true) {
                 areWeAllowed("category", true, userKey);
             } else {
@@ -268,9 +237,9 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
 
     public void areWeAllowed(String filterCategory, boolean setRule, String userKey) {
         if (filterCategory.equals("discount")) {
-            if(setRule == true){
+            if (setRule == true) {
                 markersMap.get(userKey).setDiscount(true);
-                if(markersMap.get(userKey).isKm() == true && markersMap.get(userKey).isCategory() == true && markersMap.get(userKey).isName() == true){
+                if (markersMap.get(userKey).isKm() == true && markersMap.get(userKey).isCategory() == true && markersMap.get(userKey).isName() == true) {
                     markersMap.get(userKey).getMarker().setVisible(true);
                 }
             } else {
@@ -280,9 +249,9 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
 
         }
         if (filterCategory.equals("km")) {
-            if(setRule == true){
+            if (setRule == true) {
                 markersMap.get(userKey).setKm(true);
-                if(markersMap.get(userKey).isDiscount() == true && markersMap.get(userKey).isCategory() == true && markersMap.get(userKey).isName() == true){
+                if (markersMap.get(userKey).isDiscount() == true && markersMap.get(userKey).isCategory() == true && markersMap.get(userKey).isName() == true) {
                     markersMap.get(userKey).getMarker().setVisible(true);
                 }
             } else {
@@ -291,9 +260,9 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
             }
         }
         if (filterCategory.equals("category")) {
-            if(setRule == true){
+            if (setRule == true) {
                 markersMap.get(userKey).setCategory(true);
-                if(markersMap.get(userKey).isDiscount() == true && markersMap.get(userKey).isKm() == true && markersMap.get(userKey).isName() == true){
+                if (markersMap.get(userKey).isDiscount() == true && markersMap.get(userKey).isKm() == true && markersMap.get(userKey).isName() == true) {
                     markersMap.get(userKey).getMarker().setVisible(true);
                 }
             } else {
@@ -302,9 +271,9 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
             }
         }
         if (filterCategory.equals("name")) {
-            if(setRule == true){
+            if (setRule == true) {
                 markersMap.get(userKey).setName(true);
-                if(markersMap.get(userKey).isDiscount() == true && markersMap.get(userKey).isKm() == true && markersMap.get(userKey).isCategory() == true){
+                if (markersMap.get(userKey).isDiscount() == true && markersMap.get(userKey).isKm() == true && markersMap.get(userKey).isCategory() == true) {
                     markersMap.get(userKey).getMarker().setVisible(true);
                 }
             } else {
@@ -314,7 +283,6 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
         }
 
     }
-
     public void sortByName(String name, HashMap<String, ArrayList<Shop>> test1) {
         for (int i = 0; i < test1.size(); i++) {
             String userKey = test1.keySet().toArray()[i].toString();
@@ -334,7 +302,7 @@ public class Fragment2 extends Fragment implements OnMapReadyCallback {
             }
         }
     }
-    class MarkerRules {
+    public class MarkerRules {
         private Marker marker;
         private boolean discount;
         private boolean km;

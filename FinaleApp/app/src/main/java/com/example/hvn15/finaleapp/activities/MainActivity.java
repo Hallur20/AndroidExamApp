@@ -1,17 +1,15 @@
-package com.example.hvn15.finaleapp;
+package com.example.hvn15.finaleapp.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.hvn15.finaleapp.objectClasses.Person;
+import com.example.hvn15.finaleapp.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,13 +21,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private EditText username;
     private EditText password;
-    private DatabaseReference database;
-    private String firebaseUsername;
-    private String firbasePassword;
+    private DatabaseReference allUsersFirebase;
     private ArrayList<Person> pList = new ArrayList<>();
-    public ArrayList<String> uNames =  new ArrayList<>();
-    private static final String TAG = "MainActivity";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         }
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
-        database = FirebaseDatabase.getInstance().getReference().child("users");
-        database.addValueEventListener(new ValueEventListener() {
+        allUsersFirebase = FirebaseDatabase.getInstance().getReference().child("users");
+        allUsersFirebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -63,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
                                 child.child("title").getValue().toString(),
                                 child.child("address").getValue().toString()
                         ));
-                        Log.d(TAG, child.toString());
                     } else {
                         pList.add(new Person(
                                 child.child("role").getValue().toString(),
@@ -74,23 +66,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 
-
     }
-
-    public void btnClicked(View view) {
+    public void loginBtn(View view) {
         Intent intent = new Intent(this, LoggedIn.class);
         Intent intent2 = new Intent(this, LoggedInAdmin.class);
-        //Log.d("love", database.child("username");
-
         for (int i = 0; i < pList.size(); i++) {
             if (pList.get(i).getUsername().equals(username.getText().toString())
                     && pList.get(i).getPassword().equals(password.getText().toString())
@@ -102,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("maximumDistance", pList.get(i).getMaximumDistance());
                 startActivity(intent);
 
-
             } else if (pList.get(i).getUsername().equals(username.getText().toString())
                     && pList.get(i).getPassword().equals(password.getText().toString())
                     && pList.get(i).getRole().equals("admin")) {
@@ -110,14 +94,11 @@ public class MainActivity extends AppCompatActivity {
                 intent2.putExtra("adminName", name);
                 startActivity(intent2);
 
-
             }
         }
-
     }
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == 1
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             //  gps functionality

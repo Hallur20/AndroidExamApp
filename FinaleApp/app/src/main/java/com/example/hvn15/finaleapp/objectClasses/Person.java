@@ -1,4 +1,4 @@
-package com.example.hvn15.finaleapp;
+package com.example.hvn15.finaleapp.objectClasses;
 
 import java.io.Serializable;
 
@@ -41,43 +41,21 @@ public class Person implements Serializable {
         return maximumDistance;
     }
 
-    public void setMaximumDistance(int mininumDistance) {
-        this.maximumDistance = mininumDistance;
-    }
-
     public String getAddress() {
         return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
     }
 
     public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
     public Double getLatitude() {
         return latitude;
     }
 
-
     public String getRole() {
         return role;
     }
-
 
     public String getUsername() {
         return username;
