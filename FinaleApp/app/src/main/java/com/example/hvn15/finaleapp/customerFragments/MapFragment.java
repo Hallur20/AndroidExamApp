@@ -48,6 +48,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     View mapView;
     ArrayList<Person> companies = new ArrayList<>();
     ArrayList<String> userNamesInRadius = new ArrayList<>();
+    private ArrayList<Shop> currentDiscounts = new ArrayList<>(); //empty list containing discounts belonging to a user
+    private HashMap<String, ArrayList<Shop>> deletedMarkersWithCompanies = new HashMap<>(); //empty hash map containing user key and highest discount beloning to marker (invisible markers will be saved here)
     public static HashMap<String, MarkerRules> markersMap = new HashMap<>();
     static ArrayList<Marker> markers = new ArrayList<>();
     static Marker myMarker;
@@ -64,6 +66,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
+    //After fragment has been created we get the map from Google
     public void onViewCreated(View view, Bundle saveInstanceState) {
         super.onViewCreated(view, saveInstanceState);
         mMapView = mapView.findViewById(R.id.map);
@@ -80,19 +83,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mGoogleMap = googleMap;
 
         googleMap.setMapType(googleMap.MAP_TYPE_NORMAL);
+        //Check permission for Google Maps.
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+        //This set the Current Location button in map.
         googleMap.setMyLocationEnabled(true);
+        //Gets the location from loggedIn Activity.
         location = ((LoggedIn) getActivity()).location;
-
+        //Current location, but hardcoded because of emulator location(San francisco)
         Marker marker1 = googleMap.addMarker(new MarkerOptions().position(new LatLng(/*location.getLatitude()*/55.957738, /*location.getLongitude()*/12.260400)).title("you").snippet("you are here"));
         myMarker = marker1;
-
+// we add the max and min discount numbers from the firebase.
         for (Person p : companies) {
             if (p.getRole().equals("admin")) {
-                HashMap<String, ArrayList<Shop>> test1 = (((LoggedIn) getActivity()).adminDiscountsMap);
-                ifAdminHasDiscountsCreateMarker(p, test1, marker1);
+                HashMap<String, ArrayList<Shop>> allDiscounts = (((LoggedIn) getActivity()).adminDiscountsMap);
+                ifAdminHasDiscountsCreateMarker(p, allDiscounts, marker1);
             }
         }
         for (int i = 0; i < ((LoggedIn) getActivity()).adminDiscountsMap.size(); i++) {
@@ -110,6 +116,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
 
         }
+        //if there is shop near by so the the app will vibrate then we make a builder to send a notification and then we make a mediaplayer sound .
         if (userNamesInRadius.size() > 0) {
 
             ((LoggedIn) getActivity()).vibrator.vibrate(400);
@@ -130,31 +137,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
     int counter = 0;
 
-    public void ifAdminHasDiscountsCreateMarker(Person p, HashMap<String, ArrayList<Shop>> test1, Marker marker1) {
-        if (test1.containsKey(p.getUsername())) {
+    public void ifAdminHasDiscountsCreateMarker(Person p, HashMap<String, ArrayList<Shop>> allDiscounts, Marker marker1) {
+        //Only admin with discounts will get a marker
+        if (allDiscounts.containsKey(p.getUsername())) {
             Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(p.getLatitude(), p.getLongitude())).title(p.getTitle()).snippet(p.getAddress()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
             markers.add(marker);
             markersMap.put(p.getUsername(), new MarkerRules(marker, true, true, true, true));
             float[] results = new float[1];
+            //set distance between your position and admin marker
             Location.distanceBetween(marker1.getPosition().latitude, marker1.getPosition().longitude,
                     marker.getPosition().latitude, marker.getPosition().longitude,
                     results);
+            //if the max number on seekbar is lesser than the new marker distance, replace it
             if (results[0] / 1000 > maxKm) {
                 maxKm = Math.round(results[0] / 1000);
                 ((LoggedIn) getActivity()).setMaxKmOnSeekBar(maxKm); //also add the marker that is furthest away to maximum on seekbar
             }
             ((LoggedIn) getActivity()).seekbarDistance.setProgress((((LoggedIn) getActivity()).maxKm));
             if (results[0] / 1000 < ((LoggedIn) getActivity()).distanceNumOnSeekbar) {
-                userNamesInRadius.add(p.getUsername()); // also add the markers that are in a radius of 500 km (this is hardcoded) to a list, this is for the notification showing nearby stores
+                userNamesInRadius.add(p.getUsername()); // also add the markers that are in a radius of value of km seekbar to a list, this is for the notification showing nearby stores
             }
         }
     }
-
-    public void sortByDiscount(int num, HashMap<String, ArrayList<Shop>> test1) {
+// adding and deleting markers efter the users discount % from seekbar.
+    public void sortByDiscount(int num, HashMap<String, ArrayList<Shop>> allDiscounts) {
         HashMap<String, ArrayList<Shop>> areDiscountsLegit = new HashMap<>(); //empty hashmap containing user key and their discounts
 
-        for (int x = 0; x < test1.size(); x++) {
-            areDiscountsLegit.put(test1.keySet().toArray()[x].toString(), test1.get(test1.keySet().toArray()[x])); //add the user keys and discounts from test1
+        for (int x = 0; x < allDiscounts.size(); x++) {
+            areDiscountsLegit.put(allDiscounts.keySet().toArray()[x].toString(), allDiscounts.get(allDiscounts.keySet().toArray()[x])); //add the user keys and discounts from test1
         }
         for (int a = 0; a < areDiscountsLegit.size(); a++) { //then we loop through size of the list containing user key and their discounts
 
@@ -165,7 +175,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             for (int b = 0; b < currentDiscounts.size(); b++) { //loop through discounts belonging to a user
                 if (Integer.parseInt(currentDiscounts.get(b).getDiscount()) <= num) {
                     counter++; //if seekbar number is less or same as the current element, add 1 to counter(because it's too low compared to the seekbar number)
-                    Log.d("fuck", "counter: " + counter + " current listSize: " + currentDiscounts.size());
                 }
                 if (counter == currentDiscounts.size()) { // this happens if the counter is equal to size, meaning all the discounts were too low.
                     if (deletedMarkersWithCompanies.containsKey(userKey)) { //if the hash map that saves not visible markers/userkeys does not contain the userkey, then just add marker and user key to the hash map
@@ -191,9 +200,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private ArrayList<Shop> currentDiscounts = new ArrayList<>(); //empty list containing discounts belonging to a user
-    private HashMap<String, ArrayList<Shop>> deletedMarkersWithCompanies = new HashMap<>(); //empty hash map containing user key and highest discount beloning to marker (invisible markers will be saved here)
-
+// if shop is in side the radiu so i should be shown on the map if not marker get removed efter sheeking the booleans from areWeallowed
     public void sortByKm(int num) {
 
         for (int i = 0; i < markersMap.size(); i++) {
@@ -210,16 +217,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public void sortByCategory(String category, HashMap<String, ArrayList<Shop>> test1) {
+    public void sortByCategory(String category, HashMap<String, ArrayList<Shop>> allDiscounts) {
 
-        for (int i = 0; i < test1.size(); i++) {
+        for (int i = 0; i < allDiscounts.size(); i++) {
 
-            String userKey = test1.keySet().toArray()[i].toString();
+            String userKey = allDiscounts.keySet().toArray()[i].toString();
 
 
             ArrayList<Shop> innerArray = new ArrayList<>();
-
-            innerArray = test1.get(test1.keySet().toArray()[i]);
+            innerArray = allDiscounts.get(allDiscounts.keySet().toArray()[i]);
             boolean weCanShowMarker = false;
             for (int j = 0; j < innerArray.size(); j++) {
                 if (innerArray.get(j).getCategory().contains(category)) {
@@ -283,12 +289,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
 
     }
-    public void sortByName(String name, HashMap<String, ArrayList<Shop>> test1) {
-        for (int i = 0; i < test1.size(); i++) {
-            String userKey = test1.keySet().toArray()[i].toString();
+
+    public void sortByName(String name, HashMap<String, ArrayList<Shop>> allDiscounts) {
+        for (int i = 0; i < allDiscounts.size(); i++) {
+            String userKey = allDiscounts.keySet().toArray()[i].toString();
             ArrayList<Shop> checkStoreArray = new ArrayList<>();
-            checkStoreArray = test1.get(test1.keySet().toArray()[i]);
+            checkStoreArray = allDiscounts.get(allDiscounts.keySet().toArray()[i]);
             boolean checkStore = false;
+            //if the discounts belonging to admin has any discount with name, then checkstore is true
             for (int j = 0; j < checkStoreArray.size(); j++) {
                 if (checkStoreArray.get(j).getStore().contains(name)) {
                     checkStore = true;

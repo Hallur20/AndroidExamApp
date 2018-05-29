@@ -14,7 +14,6 @@ import com.example.hvn15.finaleapp.adminFragments.CreateDiscountFragment;
 import com.example.hvn15.finaleapp.adminFragments.MapFragment;
 
 public class LoggedInAdmin extends AppCompatActivity {
-    private AdminSectionsStatePagerAdapter mSectionsStatePagerAdapter;
     private ViewPager mViewPager;
     public String adminName;
 
@@ -24,12 +23,11 @@ public class LoggedInAdmin extends AppCompatActivity {
         setContentView(R.layout.activity_logged_in_admin);
         Intent intent = getIntent();
         adminName = intent.getStringExtra("adminName");
-        mSectionsStatePagerAdapter = new AdminSectionsStatePagerAdapter(getSupportFragmentManager());
         mViewPager = findViewById(R.id.container_admin);
         //Setup the pager
         setupViewPager(mViewPager);
     }
-
+    //we add the fragments to the adpater, so we can swipe left to right
     private void setupViewPager(ViewPager viewPager) {
         SectionsStatePagerAdapter adapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new CreateDiscountFragment(), "CreateDiscountFragment");

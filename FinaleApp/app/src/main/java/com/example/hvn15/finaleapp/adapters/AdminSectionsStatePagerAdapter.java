@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//saves the admins fragments to a list
 public class AdminSectionsStatePagerAdapter extends FragmentStatePagerAdapter {
 
     private final List<Fragment> mfragmentList = new ArrayList<>();

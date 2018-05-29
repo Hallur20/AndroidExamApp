@@ -64,6 +64,7 @@ public class CreateDiscountFragment extends Fragment implements AdapterView.OnIt
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         category.setAdapter(adapter);
         category.setOnItemSelectedListener(this);
+        // geting the current date in the timepicker
         DateTimePickBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,7 +77,7 @@ public class CreateDiscountFragment extends Fragment implements AdapterView.OnIt
                 datePickerDialog.show();
             }
         });
-
+// we add a discount to the firebase, belong to the signed in admin user.
         add_discount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,6 +100,7 @@ public class CreateDiscountFragment extends Fragment implements AdapterView.OnIt
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+       // it reterives the selected data from the catorogie drop down.
         selecetedCategory = adapterView.getItemAtPosition(i).toString();
 
     }
@@ -107,6 +109,7 @@ public class CreateDiscountFragment extends Fragment implements AdapterView.OnIt
         Toast.makeText(getActivity(), "Choose something", Toast.LENGTH_LONG).show();
     }
 
+    //it retrives the choosen number from the datepicker.
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         yearFinal = i;
@@ -119,7 +122,7 @@ public class CreateDiscountFragment extends Fragment implements AdapterView.OnIt
                 hour, minute, android.text.format.DateFormat.is24HourFormat(getActivity()));
         timePickerDialog.show();
     }
-
+// format the date from calender to a simple date format we use in firebase.
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
         hourFinal = i;

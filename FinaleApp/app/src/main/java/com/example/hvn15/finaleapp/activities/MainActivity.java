@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //ask the user for the current location permission
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && checkSelfPermission(
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         allUsersFirebase = FirebaseDatabase.getInstance().getReference().child("users");
+        //get the data of the users from the firebase, then checks if the user role is a admin or a user add it to the person list
         allUsersFirebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    // if the input passes with firebase user data, then it sends you the admin activity or user activity.
     public void loginBtn(View view) {
         Intent intent = new Intent(this, LoggedIn.class);
         Intent intent2 = new Intent(this, LoggedInAdmin.class);

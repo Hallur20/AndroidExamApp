@@ -12,7 +12,7 @@ import com.example.hvn15.finaleapp.R;
 import com.example.hvn15.finaleapp.objectClasses.Shop;
 
 import java.util.ArrayList;
-
+// customiz the user discount list
 public class CustomAdapter extends BaseAdapter {
     private ArrayList<Shop> allDiscounts = new ArrayList<>();
     Context context;
