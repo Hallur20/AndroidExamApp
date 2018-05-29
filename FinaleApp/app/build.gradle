@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.example.hvn15.finaleapp"
+        applicationId "com.discountShopApp.hvn15.finaleapp"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
@@ -11,6 +11,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         resValue "string", "google_maps_key", (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
+        lintOptions {
+
+            checkReleaseBuilds false
+
+        }
     }
     buildTypes {
         release {
